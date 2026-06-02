@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeSound — Presentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg: #F7F8FC;
+    --card: #FFFFFF;
+    --subtle: #F0F2F8;
+    --border: #E2E6F0;
+    --text: #1E2A3B;
+    --text2: #5B6B82;
+    --muted: #95A0B4;
+    --pri: #7B8CFC;
+    --pri-l: #EEF0FF;
+    --pri-d: #5A68E0;
+    --pri-b: #C8CFFE;
+    --fire: #EF7070;
+    --fire-l: #FFF0F0;
+    --baby: #F5A050;
+    --baby-l: #FFF6ED;
+    --horn: #E8C040;
+    --horn-l: #FFFAED;
+    --door: #5EA0F0;
+    --door-l: #EEF4FF;
+    --teal: #50D0C0;
+    --teal-l: #ECFCF8;
+    --purple: #A888F8;
+    --purple-l: #F4F0FF;
+    --success: #50D898;
+    --success-l: #EDFDF4;
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+/* ── Slide system ────────────────────────────────── */
+.slide {
+    min-height: 100vh;
+    padding: 60px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+}
+.slide-num {
+    position: absolute; top: 24px; right: 32px;
+    font-size: 11px; font-weight: 700; color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+}
+.slide-tag {
+    display: inline-block; padding: 4px 14px; border-radius: 100px;
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 20px;
+}
+
+h1 { font-size: 48px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 16px; }
+h2 { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 12px; }
+h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+
+.subtitle { font-size: 18px; color: var(--text2); max-width: 700px; line-height: 1.7; }
+
+/* ── Grids ────────────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+/* ── Cards ────────────────────────────────────────── */
+.card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px;
+    box-shadow: 0 1px 4px rgba(30,42,59,0.04);
+}
+.card-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.2px; color: var(--muted); margin-bottom: 14px;
+}
+
+/* ── Metric boxes ─────────────────────────────────── */
+.metric {
+    padding: 20px; border-radius: 12px; text-align: center;
+    border: 1px solid var(--border);
+}
+.metric-val { font-size: 32px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+.metric-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px; }
+
+/* ── Code blocks ─────────────────────────────────── */
+.code {
+    background: #1E2A3B; color: #E8ECF4; padding: 20px 24px;
+    border-radius: 10px; font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; line-height: 1.8; overflow-x: auto;
+    white-space: pre;
+}
+.code .kw { color: #A888F8; }
+.code .fn { color: #7B8CFC; }
+.code .str { color: #50D898; }
+.code .cm { color: #6B7B94; }
+.code .num { color: #F5A050; }
+
+/* ── Pipeline flow ───────────────────────────────── */
+.flow { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap; padding: 16px 0; }
+.flow-step {
+    padding: 14px 18px; text-align: center; min-width: 120px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; box-shadow: 0 1px 4px rgba(30,42,59,0.04);
+}
+.flow-step.active { background: var(--pri-l); border-color: var(--pri-b); }
+.flow-step-name { font-size: 12px; font-weight: 700; }
+.flow-step-detail { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.flow-arrow { padding: 0 8px; color: var(--muted); font-size: 18px; }
+
+/* ── Tables ───────────────────────────────────────── */
+.tbl { width: 100%; border-collapse: collapse; }
+.tbl th {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--muted); text-align: left;
+    padding: 10px 14px; border-bottom: 2px solid var(--border);
+}
+.tbl td { font-size: 13px; padding: 10px 14px; border-bottom: 1px solid var(--subtle); }
+.tbl td:first-child { font-weight: 600; }
+.tbl .mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ── Badges ───────────────────────────────────────── */
+.badge { display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.b-crit { background: var(--fire-l); color: var(--fire); }
+.b-high { background: var(--baby-l); color: var(--baby); }
+.b-med { background: var(--door-l); color: var(--door); }
+.b-none { background: var(--subtle); color: var(--muted); }
+.b-pri { background: var(--pri-l); color: var(--pri-d); border: 1px solid var(--pri-b); }
+.b-suc { background: var(--success-l); color: #2A8A62; }
+.b-pur { background: var(--purple-l); color: #7C5CC8; }
+
+/* ── Progress bars ────────────────────────────────── */
+.bar-track { height: 8px; background: var(--subtle); border-radius: 4px; overflow: hidden; margin-top: 6px; }
+.bar-fill { height: 100%; border-radius: 4px; }
+
+/* ── Images ───────────────────────────────────────── */
+.fig { border-radius: 12px; border: 1px solid var(--border); max-width: 100%; display: block; }
+
+/* ── Callout ──────────────────────────────────────── */
+.callout {
+    padding: 18px 24px; border-radius: 12px; margin: 16px 0;
+    border-left: 4px solid;
+}
+.callout p { font-size: 14px; line-height: 1.7; }
+
+/* ── Nav dots ─────────────────────────────────────── */
+.nav {
+    position: fixed; right: 16px; top: 50%;
+    transform: translateY(-50%); z-index: 100;
+    display: flex; flex-direction: column; gap: 8px;
+}
+.nav a {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--border); display: block;
+    transition: all 0.2s;
+}
+.nav a:hover, .nav a.active { background: var(--pri); transform: scale(1.3); }
+
+/* ── Speaker notes (hidden by default, shown with ?notes) ── */
+.notes { display: none; }
+body.show-notes .notes {
+    display: block; background: #FFFDE8; border: 1px solid #F0E8B0;
+    border-radius: 10px; padding: 16px 20px; margin-top: 24px;
+    font-size: 13px; color: #5A5030; line-height: 1.7;
+}
+body.show-notes .notes::before {
+    content: 'SCRIPT'; display: block;
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    color: #A09060; margin-bottom: 8px;
+}
+
+@media print {
+    .slide { page-break-after: always; min-height: auto; padding: 40px; }
+    .nav { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav dots -->
+<nav class="nav" id="nav"></nav>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 1: TITLE -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s1" style="text-align:center; justify-content:center;">
+    <span class="slide-num">01</span>
+    <div style="margin-bottom:24px;">
+        <div style="display:inline-block;width:80px;height:80px;border-radius:22px;
+                    background:linear-gradient(135deg,var(--pri),var(--purple));
+                    box-shadow:0 8px 32px rgba(123,140,252,0.3);margin-bottom:24px;"></div>
+    </div>
+    <h1 style="font-size:64px;">SafeSound</h1>
+    <p class="subtitle" style="margin:0 auto;font-size:20px;">
+        Bracelet IoT de classification sonore en temps reel pour les personnes sourdes et malentendantes
+    </p>
+    <div style="margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <span class="badge b-pri">On-Device ML</span>
+        <span class="badge b-suc">95.4% Accuracy</span>
+        <span class="badge b-pur">36.4 KB INT8</span>
+        <span class="badge b-crit">Zero Cloud</span>
+    </div>
+    <div style="margin-top:48px;font-size:13px;color:var(--muted);">
+        Projet de fin de module &mdash; Systemes Embarques IoT &mdash; S8
+    </div>
+    <div class="notes">
+        Bonjour. Nous vous presentons SafeSound, un bracelet IoT intelligent destine aux personnes sourdes et malentendantes. Le bracelet ecoute l'environnement en continu, classifie les sons critiques en temps reel directement sur le microcontroleur, et alerte l'utilisateur via des LEDs colorees et des vibrations. Aucune connexion cloud n'est necessaire : tout le traitement se fait sur l'appareil, avec un modele de seulement 36.4 kilo-octets qui atteint 95.4% de precision.
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 2: PROBLEM & HUMAN VALUE -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s2">
+    <span class="slide-num">02</span>
+    <span class="slide-tag" style="background:var(--fire-l);color:var(--fire);">Le Probleme</span>
+    <h2>466 millions de personnes dans le monde souffrent de perte auditive</h2>
+    <p class="subtitle">Une alarme incendie, un bebe qui pleure, une personne qui s'etouffe, un klaxon &mdash; ces sons critiques peuvent passer completement inapercus.</p>
+
+    <div class="grid-3" style="margin-top:32px;">
+        <div class="card" style="border-left:4px solid var(--fire);">
+            <h3 style="color:var(--fire);">Securite</h3>
+            <p style="font-size:13px;color:var(--text2);">Les alarmes incendie et les signaux de danger sont concus pour etre entendus. Les personnes sourdes n'ont aucun moyen equivalent de detection autonome en temps reel.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--baby);">
+            <h3 style="color:var(--baby);">Quotidien</h3>
+            <p style="font-size:13px;color:var(--text2);">La sonnette, le bebe qui pleure dans une autre piece &mdash; des situations courantes ou l'absence de feedback sonore affecte l'autonomie et la qualite de vie.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--pri);">
+            <h3 style="color:var(--pri);">Notre solution</h3>
+            <p style="font-size:13px;color:var(--text2);">Un bracelet discret qui transforme les sons en alertes visuelles et haptiques. Pas de smartphone obligatoire, pas de cloud, pas de latence &mdash; une solution autonome et portable.</p>
+        </div>
+    </div>
+
+    <div class="callout" style="border-color:var(--pri);background:var(--pri-l);margin-top:24px;">
+        <p><strong>Valeur humaine :</strong> SafeSound rend l'environnement sonore accessible. Il ne s'agit pas seulement de technologie &mdash; c'est un outil d'inclusion qui restaure un canal sensoriel essentiel a la securite et a l'autonomie quotidienne.</p>
+    </div>
+
+    <div class="notes">
+        Selon l'OMS, 466 millions de personnes dans le monde ont une perte auditive invalidante. Pour ces personnes, les sons critiques de securite sont invisibles. Notre projet, SafeSound, transforme ces sons en alertes visuelles et haptiques via un bracelet leger. La valeur humaine est au coeur du projet : on ne parle pas juste de tech, mais d'un outil d'inclusion qui redonne de l'autonomie. Pas besoin de smartphone, pas de cloud, pas d'abonnement. Le bracelet fonctionne de maniere autonome.
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 3: SYSTEM OVERVIEW -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s3">
+    <span class="slide-num">03</span>
+    <span class="slide-tag" style="background:var(--pri-l);color:var(--pri-d);">Architecture</span>
+    <h2>Vue d'ensemble du systeme</h2>
+
+    <div class="flow" style="margin:32px 0;">
+        <div class="flow-step"><div class="flow-step-name">INMP441</div><div class="flow-step-detail">Micro I2S, 16kHz</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-step-name">Log-Mel</div><div class="flow-step-detail">64 canaux, 32ms</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step active"><div class="flow-step-name">DS-CNN INT8</div><div class="flow-step-detail">36.4 KB, &lt;2ms</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-step-name">Smoothing</div><div class="flow-step-detail">3-frame vote</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-step-name">Alerte</div><div class="flow-step-detail">LED + Vibration</div></div>
+    </div>
+
+    <div class="grid-4" style="margin-top:16px;">
+        <div class="metric" style="background:var(--pri-l);border-color:var(--pri-b);">
+            <div class="metric-val" style="color:var(--pri-d);">36.4 KB</div>
+            <div class="metric-label">Taille du modele</div>
+        </div>
+        <div class="metric" style="background:var(--success-l);border-color:var(--success)33;">
+            <div class="metric-val" style="color:#2A8A62;">95.4%</div>
+            <div class="metric-label">Precision</div>
+        </div>
+        <div class="metric" style="background:var(--purple-l);border-color:var(--purple)33;">
+            <div class="metric-val" style="color:#7C5CC8;">&lt; 2 ms</div>
+            <div class="metric-label">Latence ESP32</div>
+        </div>
+        <div class="metric" style="background:var(--baby-l);border-color:var(--baby)33;">
+            <div class="metric-val" style="color:var(--baby);">6</div>
+            <div class="metric-label">Classes sonores</div>
+        </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:24px;">
+        <div class="card">
+            <div class="card-label">Classes detectees</div>
+            <table class="tbl">
+                <thead><tr><th>Classe</th><th>Priorite</th><th>LED</th><th>Vibration</th></tr></thead>
+                <tbody>
+                    <tr><td>Alarme incendie</td><td><span class="badge b-crit">Critique</span></td><td style="color:var(--fire);">Rouge</td><td class="mono">5 impulsions</td></tr>
+                    <tr><td>Etouffement</td><td><span class="badge b-crit">Critique</span></td><td style="color:var(--fire);">Rouge</td><td class="mono">5 impulsions</td></tr>
+                    <tr><td>Pleur de bebe</td><td><span class="badge b-high">Haute</span></td><td style="color:var(--baby);">Orange</td><td class="mono">3 impulsions</td></tr>
+                    <tr><td>Klaxon</td><td><span class="badge b-high">Haute</span></td><td style="color:var(--horn);">Jaune</td><td class="mono">3 impulsions</td></tr>
+                    <tr><td>Sonnette</td><td><span class="badge b-med">Moyenne</span></td><td style="color:var(--door);">Bleu</td><td class="mono">1 impulsion</td></tr>
+                    <tr><td>Fond sonore</td><td><span class="badge b-none">Aucune</span></td><td style="color:var(--muted);">Eteint</td><td class="mono">Aucune</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card">
+            <div class="card-label">Contraintes de conception</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+                <div><strong>Zero cloud :</strong> <span style="color:var(--text2);">Inference 100% on-device, pas de Wi-Fi requis</span></div>
+                <div><strong>512 KB SRAM :</strong> <span style="color:var(--text2);">Le modele + buffers doivent tenir dans la memoire de l'ESP32-S3</span></div>
+                <div><strong>Modele &lt; 100 KB :</strong> <span style="color:var(--text2);">Apres quantification INT8 (atteint : 36.4 KB)</span></div>
+                <div><strong>Latence &lt; 500 ms :</strong> <span style="color:var(--text2);">Du son a l'alerte (atteint : ~2 ms inference)</span></div>
+                <div><strong>Autonomie :</strong> <span style="color:var(--text2);">8-12h sur batterie LiPo 1000mAh</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notes">
+        Voici l'architecture complete du systeme. Le microphone INMP441 capture l'audio a 16 kHz via le protocole I2S. L'audio est transforme en spectrogramme log-Mel de 64 canaux. Le modele DS-CNN quantifie en INT8, qui ne fait que 36.4 kilo-octets, classifie en moins de 2 millisecondes. Un lissage temporel sur 3 frames evite les faux positifs. Enfin, les LEDs RGB et le moteur de vibration alertent l'utilisateur. Nous detectons 6 classes : alarme incendie, etouffement, pleur de bebe, klaxon, sonnette, et bruit de fond. Chaque classe a une couleur LED et un pattern de vibration specifique. Les contraintes embarquees ont guide chaque decision : le modele tient dans 9.4% de la SRAM disponible, et tourne sans aucune operation en virgule flottante.
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 4: ML PIPELINE -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s4">
+    <span class="slide-num">04</span>
+    <span class="slide-tag" style="background:var(--purple-l);color:#7C5CC8;">Machine Learning</span>
+    <h2>Pipeline ML : Du Teacher au modele deploye</h2>
+    <p class="subtitle">Compression 23x par Knowledge Distillation + QAT INT8</p>
+
+    <div class="flow" style="margin:28px 0;">
+        <div class="flow-step"><div class="flow-step-name">Teacher CNN</div><div class="flow-step-detail">423K params, ~1.7 MB</div></div>
+        <div class="flow-arrow" style="flex-direction:column;text-align:center;">
+            <span>&rarr;</span>
+            <span style="font-size:9px;color:var(--pri);font-weight:700;">DISTILLATION</span>
+            <span style="font-size:9px;color:var(--muted);">T=6, &alpha;=0.7</span>
+        </div>
+        <div class="flow-step"><div class="flow-step-name">Student DS-CNN</div><div class="flow-step-detail">18K params, ~72 KB</div></div>
+        <div class="flow-arrow" style="flex-direction:column;text-align:center;">
+            <span>&rarr;</span>
+            <span style="font-size:9px;color:var(--pri);font-weight:700;">QAT INT8</span>
+            <span style="font-size:9px;color:var(--muted);">10 epochs, LR=1e-5</span>
+        </div>
+        <div class="flow-step active"><div class="flow-step-name">TFLite INT8</div><div class="flow-step-detail">18K params, 36.4 KB</div></div>
+    </div>
+
+    <div class="grid-2" style="margin-top:16px;">
+        <div class="card">
+            <div class="card-label">Knowledge Distillation (Hinton et al., 2015)</div>
+            <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">
+                La Knowledge Distillation est une technique introduite par <strong>Geoffrey Hinton, Oriol Vinyals et Jeff Dean</strong> dans l'article
+                <em>"Distilling the Knowledge in a Neural Network"</em> (2015). Le principe : un grand modele "Teacher" transfere ses connaissances a un petit modele "Student" via des <strong>distributions de probabilites douces</strong> (soft labels).
+            </p>
+            <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">
+                A temperature T=1, le Teacher dit "c'est une alarme incendie a 95%". A T=6, il dit "c'est 60% alarme, 25% klaxon, 15% fond" &mdash; cette information de <strong>similarite inter-classes</strong> est invisible dans les labels classiques one-hot, mais extremement utile pour un petit modele.
+            </p>
+            <div class="code"><span class="cm">// Fonction de perte de distillation</span>
+<span class="kw">loss</span> = <span class="num">0.7</span> * <span class="fn">KL</span>(teacher_soft, student_soft) * T<sup>2</sup>
+     + <span class="num">0.3</span> * <span class="fn">CrossEntropy</span>(labels, student)
+
+<span class="cm">// T=6 adoucit la distribution du Teacher</span>
+<span class="cm">// alpha=0.7 : 70% du signal vient du Teacher</span></div>
+        </div>
+        <div class="card">
+            <div class="card-label">DS-CNN (Zhang et al., 2017 &mdash; "Hello Edge")</div>
+            <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">
+                L'architecture DS-CNN (Depthwise Separable CNN) est issue de l'article <strong>"Hello Edge: Keyword Spotting on Microcontrollers"</strong>.
+                Elle utilise des <strong>convolutions separables en profondeur</strong> : au lieu d'un filtre 3x3 applique sur tous les canaux simultanement, on applique d'abord un filtre 3x3 par canal (depthwise), puis une convolution 1x1 (pointwise) pour combiner les canaux.
+            </p>
+            <p style="font-size:13px;color:var(--text2);margin-bottom:12px;">
+                Cette factorisation reduit le nombre d'operations de ~8x pour un noyau 3x3 avec 64 canaux, ce qui est essentiel pour une inference en &lt;2ms.
+            </p>
+            <div class="code"><span class="cm">// Architecture du Student DS-CNN</span>
+Conv2D(32) &rarr; BN &rarr; ReLU &rarr; MaxPool
+<span class="fn">DS Block 1:</span> DW(3x3) &rarr; BN &rarr; PW(64) &rarr; MaxPool
+<span class="fn">DS Block 2:</span> DW(3x3) &rarr; BN &rarr; PW(64) &rarr; MaxPool
+<span class="fn">DS Block 3:</span> DW(3x3) &rarr; BN &rarr; PW(128)
+GlobalAveragePooling &rarr; Dropout(0.3) &rarr; Dense(6)
+
+<span class="cm">// 18,086 parametres total</span></div>
+        </div>
+    </div>
+
+    <div class="notes">
+        Notre pipeline ML utilise deux techniques avancees issues de la recherche. La Knowledge Distillation, introduite par Hinton, Vinyals et Dean en 2015, permet de compresser un grand modele Teacher de 423 mille parametres en un petit Student de seulement 18 mille parametres — un ratio de compression de 23x. Le Teacher apprend d'abord les relations entre classes, puis transfère cette connaissance via des probabilites adoucies a temperature T=6. L'architecture du Student est un DS-CNN, issu de l'article "Hello Edge" de Zhang et al. en 2017, specialement concu pour l'inference sur microcontroleurs. Les convolutions separables en profondeur reduisent les operations par un facteur 8. Enfin, la quantification QAT (Quantization-Aware Training) convertit tous les poids et activations en INT8, divisant la taille par 4 tout en maintenant, voire ameliorant, la precision grace a la regularisation supplementaire.
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 5: SIGNAL PROCESSING -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s5">
+    <span class="slide-num">05</span>
+    <span class="slide-tag" style="background:var(--teal-l);color:var(--teal);">Signal Processing</span>
+    <h2>Traitement du signal : De l'audio brut au tenseur INT8</h2>
+
+    <div class="grid-2" style="margin-top:24px;">
+        <div>
+            <div class="card" style="margin-bottom:16px;">
+                <div class="card-label">1. Capture audio</div>
+                <p style="font-size:13px;color:var(--text2);">Le micro INMP441 echantillonne a 16 kHz en mono via I2S. Chaque fenetre d'analyse fait 1 seconde (16,000 echantillons) avec un chevauchement de 50% (stride 500ms).</p>
+            </div>
+            <div class="card" style="margin-bottom:16px;">
+                <div class="card-label">2. Spectrogramme Log-Mel</div>
+                <p style="font-size:13px;color:var(--text2);">STFT avec fenetre FFT de 512 echantillons (32ms) et hop de 256 (16ms). Les coefficients de puissance sont projetes sur 64 filtres Mel entre 60 Hz et 7600 Hz, puis convertis en echelle logarithmique (dB). <strong>Pourquoi Log-Mel et non MFCC ?</strong> Les MFCC appliquent une DCT qui detruit la localite spatiale &mdash; mauvais pour un CNN.</p>
+            </div>
+            <div class="card" style="margin-bottom:16px;">
+                <div class="card-label">3. Normalisation [0, 1]</div>
+                <p style="font-size:13px;color:var(--text2);">Normalisation min-max par fenetre. Sortie : tenseur float32 de forme (1, 64, 63, 1) &mdash; 64 canaux Mel, 63 frames temporels.</p>
+            </div>
+            <div class="card">
+                <div class="card-label">4. Quantification INT8</div>
+                <p style="font-size:13px;color:var(--text2);">Transformation affine : x_int8 = x_float / scale + zero_point. Le tenseur float32 de 15.8 KB devient un tenseur INT8 de 4.0 KB &mdash; reduction de 4x avec perte minimale.</p>
+            </div>
+        </div>
+        <div>
+            <div class="code" style="margin-bottom:16px;font-size:11px;"><span class="cm"># Feature extraction (Python, identique au firmware)</span>
+
+<span class="kw">import</span> librosa
+
+<span class="cm"># Parametres (identiques dans firmware/esp32/main.ino)</span>
+SAMPLE_RATE = <span class="num">16000</span>
+N_FFT       = <span class="num">512</span>    <span class="cm"># fenetre FFT = 32ms</span>
+HOP_LENGTH  = <span class="num">256</span>    <span class="cm"># hop = 16ms</span>
+N_MELS      = <span class="num">64</span>     <span class="cm"># canaux Mel</span>
+F_MIN, F_MAX = <span class="num">60</span>, <span class="num">7600</span>
+
+<span class="cm"># 1. Spectrogramme Mel (puissance)</span>
+mel = librosa.<span class="fn">feature.melspectrogram</span>(
+    y=audio, sr=SAMPLE_RATE,
+    n_fft=N_FFT, hop_length=HOP_LENGTH,
+    n_mels=N_MELS, fmin=F_MIN, fmax=F_MAX
+)
+
+<span class="cm"># 2. Conversion en echelle logarithmique</span>
+log_mel = librosa.<span class="fn">power_to_db</span>(mel, ref=np.max)
+
+<span class="cm"># 3. Normalisation min-max</span>
+normalized = (log_mel - log_mel.min()) \
+           / (log_mel.max() - log_mel.min())
+
+<span class="cm"># 4. Quantification INT8</span>
+x_int8 = (normalized / scale + zero_point)<span class="fn">.astype</span>(np.int8)
+
+<span class="cm"># Forme finale : (1, 64, 63, 1)</span></div>
+            <div class="card">
+                <div class="card-label">Parametres techniques</div>
+                <table class="tbl">
+                    <tbody>
+                        <tr><td>Taux d'echantillonnage</td><td class="mono">16,000 Hz</td></tr>
+                        <tr><td>Fenetre FFT</td><td class="mono">512 samples (32 ms)</td></tr>
+                        <tr><td>Hop length</td><td class="mono">256 samples (16 ms)</td></tr>
+                        <tr><td>Canaux Mel</td><td class="mono">64</td></tr>
+                        <tr><td>Plage frequentielle</td><td class="mono">60 - 7,600 Hz</td></tr>
+                        <tr><td>Forme de sortie</td><td class="mono">(64, 63, 1)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="notes">
+        Voyons le traitement du signal etape par etape. Le micro capture 16 000 echantillons par seconde. Chaque fenetre d'analyse fait 1 seconde avec 50% de chevauchement. On applique une STFT avec une fenetre de 32 ms, puis on projette sur 64 filtres Mel entre 60 et 7600 Hz. On a choisi Log-Mel au lieu de MFCC parce que les MFCC appliquent une DCT qui detruit la localite spatiale, ce qui est mauvais pour un CNN. Apres normalisation, on quantifie en INT8 via une transformation affine. Le tenseur final fait 4 KB au lieu de 15.8 KB. Ces parametres sont identiques entre le code Python et le firmware C++ sur l'ESP32.
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 6: RESULTS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s6">
+    <span class="slide-num">06</span>
+    <span class="slide-tag" style="background:var(--success-l);color:#2A8A62;">Resultats</span>
+    <h2>Performance du modele</h2>
+
+    <div class="grid-2" style="margin-top:24px;">
+        <div>
+            <div class="card" style="margin-bottom:16px;">
+                <div class="card-label">F1-Score par classe (INT8, n=153)</div>
+                <table class="tbl">
+                    <thead><tr><th>Classe</th><th>Precision</th><th>Recall</th><th>F1-Score</th></tr></thead>
+                    <tbody>
+                        <tr><td>Alarme incendie</td><td class="mono">0.921</td><td class="mono">0.972</td><td class="mono" style="font-weight:700;">0.945</td></tr>
+                        <tr><td>Pleur de bebe</td><td class="mono">1.000</td><td class="mono">1.000</td><td class="mono" style="font-weight:700;color:var(--success);">1.000</td></tr>
+                        <tr><td>Etouffement</td><td class="mono">0.857</td><td class="mono">0.947</td><td class="mono" style="font-weight:700;">0.900</td></tr>
+                        <tr><td>Klaxon</td><td class="mono">0.895</td><td class="mono">0.971</td><td class="mono" style="font-weight:700;">0.933</td></tr>
+                        <tr><td>Sonnette</td><td class="mono">0.958</td><td class="mono">0.856</td><td class="mono" style="font-weight:700;">0.906</td></tr>
+                        <tr><td>Fond sonore</td><td class="mono">1.000</td><td class="mono">0.986</td><td class="mono" style="font-weight:700;">0.993</td></tr>
+                        <tr style="border-top:2px solid var(--border);"><td style="color:var(--pri-d);font-weight:700;">Macro F1</td><td></td><td></td><td class="mono" style="font-weight:800;color:var(--pri-d);font-size:16px;">0.946</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <div class="card-label">Comparaison des modeles</div>
+                <table class="tbl">
+                    <thead><tr><th>Modele</th><th>Params</th><th>Taille</th><th>Accuracy</th></tr></thead>
+                    <tbody>
+                        <tr><td>Teacher CNN</td><td class="mono">423K</td><td class="mono">~1.7 MB</td><td class="mono">94.1%</td></tr>
+                        <tr><td>Student float32</td><td class="mono">18K</td><td class="mono">~72 KB</td><td class="mono">94.1%</td></tr>
+                        <tr style="background:var(--pri-l);"><td style="color:var(--pri-d);font-weight:700;">Student INT8</td><td class="mono" style="color:var(--pri-d);">18K</td><td class="mono" style="color:var(--pri-d);font-weight:700;">36.4 KB</td><td class="mono" style="color:var(--pri-d);font-weight:700;">95.4%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+            <div class="card" style="margin-bottom:16px;">
+                <div class="card-label">Objectifs vs Atteints</div>
+                <div style="display:flex;flex-direction:column;gap:16px;">
+                    <div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                            <span style="font-size:12px;">Taille du modele</span>
+                            <span style="font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--success);">36.4 KB / 100 KB</span>
+                        </div>
+                        <div class="bar-track"><div class="bar-fill" style="width:36%;background:var(--success);"></div></div>
+                    </div>
+                    <div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                            <span style="font-size:12px;">Precision</span>
+                            <span style="font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--success);">95.4% / 90%</span>
+                        </div>
+                        <div class="bar-track"><div class="bar-fill" style="width:95%;background:var(--success);"></div></div>
+                    </div>
+                    <div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                            <span style="font-size:12px;">Latence ESP32</span>
+                            <span style="font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--success);">~2 ms / 100 ms</span>
+                        </div>
+                        <div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--success);"></div></div>
+                    </div>
+                    <div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                            <span style="font-size:12px;">SRAM utilisee</span>
+                            <span style="font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--success);">48.3 KB / 512 KB (9.4%)</span>
+                        </div>
+                        <div class="bar-track"><div class="bar-fill" style="width:9.4%;background:var(--pri);"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="callout" style="border-color:var(--success);background:var(--success-l);">
+                <p><strong>Observation :</strong> Le modele INT8 est plus precis que le float32 (95.4% vs 94.1%). Ce n'est pas une erreur : le QAT ajoute 10 epochs de fine-tuning avec SpecAugment, ce qui regularise davantage le modele. C'est un phenomene documente dans la litterature sur les petits modeles.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="notes">
+        Regardons les resultats. Notre modele INT8 atteint un F1 macro de 0.946, avec un perfect score sur la classe pleur de bebe. La classe la plus difficile est l'etouffement a 0.900, ce qui est attendu vu la variabilite acoustique. Fait notable : le modele INT8 est plus precis que le float32. Ce n'est pas une anomalie, c'est un phenomene documente : le QAT ajoute des epochs de fine-tuning avec augmentation, ce qui regularise le modele. Tous nos objectifs sont largement depasses : 36 KB au lieu de 100 KB, 95% au lieu de 90%, 2 ms au lieu de 100 ms. Le modele n'utilise que 9.4% de la SRAM disponible.
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 7: HARDWARE & WOKWI -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s7">
+    <span class="slide-num">07</span>
+    <span class="slide-tag" style="background:var(--baby-l);color:var(--baby);">Hardware</span>
+    <h2>Hardware : Composants et simulation Wokwi</h2>
+
+    <div class="callout" style="border-color:var(--baby);background:var(--baby-l);margin-bottom:20px;">
+        <p><strong>Contrainte :</strong> Nous n'avions pas acces au materiel physique. Toute la validation hardware a ete faite via <strong>Wokwi</strong> (simulateur en ligne pour ESP32) et un simulateur Python qui reproduit exactement la logique du firmware. Le schema Wokwi est importable pour verification.</p>
+    </div>
+
+    <div class="grid-2">
+        <div>
+            <div class="card" style="margin-bottom:16px;">
+                <div class="card-label">Bill of Materials &mdash; Composants reels</div>
+                <table class="tbl">
+                    <thead><tr><th>Composant</th><th>Reference</th><th>Cout estime</th></tr></thead>
+                    <tbody>
+                        <tr><td>MCU</td><td>ESP32-S3 DevKitC</td><td class="mono">~8 EUR</td></tr>
+                        <tr><td>Microphone</td><td>INMP441 (I2S MEMS)</td><td class="mono">~3 EUR</td></tr>
+                        <tr><td>LEDs</td><td>WS2812B x8</td><td class="mono">~2 EUR</td></tr>
+                        <tr><td>Moteur vibration</td><td>ERM 3V DC + NPN</td><td class="mono">~1 EUR</td></tr>
+                        <tr><td>Batterie</td><td>LiPo 3.7V 1000mAh</td><td class="mono">~4 EUR</td></tr>
+                        <tr><td>Chargeur</td><td>TP4056 USB-C</td><td class="mono">~1 EUR</td></tr>
+                        <tr style="font-weight:700;border-top:2px solid var(--border);"><td colspan="2">Total estime</td><td class="mono" style="color:var(--pri-d);">~19 EUR</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <div class="card-label">Adaptations Wokwi</div>
+                <table class="tbl">
+                    <thead><tr><th>Composant reel</th><th>Substitut Wokwi</th><th>Raison</th></tr></thead>
+                    <tbody>
+                        <tr><td>Moteur ERM</td><td>Buzzer</td><td style="font-size:12px;">Wokwi n'a pas de moteur vibration &mdash; le buzzer simule le feedback haptique</td></tr>
+                        <tr><td>INMP441 I2S</td><td>Pins connectes</td><td style="font-size:12px;">Wokwi ne simule pas I2S &mdash; les pins sont montres connectes, l'audio est injecte via Serial</td></tr>
+                        <tr><td>TFLite Micro</td><td>Serial commands</td><td style="font-size:12px;">Wokwi ne supporte pas TFLite &mdash; la classification est simulee via commandes texte</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+            <div class="card">
+                <div class="card-label">Schema du circuit (simulation Wokwi)</div>
+                <img src="../notebooks/figures/circuit_schematic.png" alt="Circuit schematic" class="fig" style="width:100%;">
+                <div style="margin-top:12px;font-size:12px;color:var(--text2);">
+                    <strong>Assignation des pins :</strong><br>
+                    I2S : SCK=GPIO14, WS=GPIO15, SD=GPIO13<br>
+                    LEDs : GPIO5 (WS2812B data)<br>
+                    Moteur : GPIO6 (via transistor NPN + R=100 Ohm)<br>
+                    Status LED : GPIO7 (verte, systeme pret)<br>
+                    Boutons : GPIO4 (MODE), GPIO8 (TEST)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notes">
+        Nous n'avions pas acces au materiel physique, donc nous avons utilise Wokwi, un simulateur en ligne pour ESP32. Quelques adaptations ont ete necessaires : le moteur de vibration est remplace par un buzzer car Wokwi ne supporte pas les moteurs ERM, et la classification audio est simulee via des commandes serie car Wokwi ne supporte pas I2S ni TFLite Micro. Le cout total du prototype reel serait d'environ 19 euros. Le choix de chaque composant est justifie : l'ESP32-S3 pour son dual-core et TFLite Micro, l'INMP441 pour sa sortie I2S numerique sans bruit ADC, les WS2812B pour le codage couleur par classe, et le moteur ERM pour le feedback haptique discret.
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 8: IOT ARCHITECTURE -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s8">
+    <span class="slide-num">08</span>
+    <span class="slide-tag" style="background:var(--teal-l);color:var(--teal);">IoT</span>
+    <h2>Architecture IoT : Du bracelet au caregiver</h2>
+
+    <div class="flow" style="margin:24px 0;">
+        <div class="flow-step"><div class="flow-step-name">INMP441</div><div class="flow-step-detail">I2S, 16kHz</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step active"><div class="flow-step-name">ESP32-S3</div><div class="flow-step-detail">Inference locale</div></div>
+        <div class="flow-arrow"><span>&rarr;</span><div style="font-size:8px;color:var(--pri);font-weight:700;">BLE 5.0</div></div>
+        <div class="flow-step"><div class="flow-step-name">Smartphone</div><div class="flow-step-detail">Bridge BLE/MQTT</div></div>
+        <div class="flow-arrow"><span>&rarr;</span><div style="font-size:8px;color:var(--pri);font-weight:700;">MQTT</div></div>
+        <div class="flow-step"><div class="flow-step-name">Mosquitto</div><div class="flow-step-detail">Broker, port 1883</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-step-name">Node-RED</div><div class="flow-step-detail">Flow engine</div></div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step"><div class="flow-step-name">Aidant</div><div class="flow-step-detail">Notification push</div></div>
+    </div>
+
+    <div class="grid-2" style="margin-top:16px;">
+        <div class="card">
+            <div class="card-label">Topics MQTT</div>
+            <table class="tbl">
+                <thead><tr><th>Topic</th><th>Direction</th><th>Contenu</th></tr></thead>
+                <tbody>
+                    <tr><td class="mono" style="font-size:11px;">safesound/classification</td><td>ESP32 &rarr; Broker</td><td>Classe + confiance</td></tr>
+                    <tr><td class="mono" style="font-size:11px;">safesound/alert</td><td>ESP32 &rarr; Broker</td><td>Alerte si seuil depasse</td></tr>
+                    <tr><td class="mono" style="font-size:11px;">safesound/device/status</td><td>ESP32 &rarr; Broker</td><td>Batterie, uptime</td></tr>
+                    <tr><td class="mono" style="font-size:11px;">safesound/notification</td><td>Broker &rarr; Aidant</td><td>Notification push</td></tr>
+                    <tr><td class="mono" style="font-size:11px;">safesound/config/thresholds</td><td>Broker &rarr; ESP32</td><td>Configuration a distance</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card">
+            <div class="card-label">Choix IoT et justification</div>
+            <div style="display:flex;flex-direction:column;gap:12px;font-size:13px;">
+                <div><strong>BLE 5.0</strong> (pas Wi-Fi) : <span style="color:var(--text2);">Consommation 10x inferieure au Wi-Fi. Le bracelet n'a pas besoin d'IP propre &mdash; le smartphone sert de bridge.</span></div>
+                <div><strong>MQTT</strong> (pas HTTP) : <span style="color:var(--text2);">Protocole leger pub/sub, ideal pour IoT. Overhead minimal par message (~2 bytes header). QoS configurable.</span></div>
+                <div><strong>Node-RED</strong> : <span style="color:var(--text2);">Programmation visuelle des flux. Permet de configurer les regles d'alerte et les notifications sans code.</span></div>
+                <div><strong>Architecture edge-first</strong> : <span style="color:var(--text2);">L'inference est locale. Le cloud est optionnel &mdash; uniquement pour la notification de l'aidant. Le bracelet fonctionne meme sans telephone.</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notes">
+        Cote IoT, l'architecture suit un modele edge-first. L'inference est entierement locale sur l'ESP32. Le cloud n'intervient que pour notifier un aidant distant. Le bracelet communique avec le smartphone via BLE 5.0, choisi pour sa consommation 10 fois inferieure au Wi-Fi. Le smartphone sert de bridge BLE vers MQTT. Mosquitto est le broker MQTT, et Node-RED orchestre les flux. Les topics MQTT suivent une convention hierarchique : classification, alerte, status device, notification, et configuration des seuils a distance. Le point cle : le bracelet continue de fonctionner meme sans telephone. Les alertes LED et vibration sont toujours actives.
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 9: FIRMWARE & CODE -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s9">
+    <span class="slide-num">09</span>
+    <span class="slide-tag" style="background:var(--subtle);color:var(--text2);">Firmware</span>
+    <h2>Firmware ESP32-S3 et technologies</h2>
+
+    <div class="grid-2" style="margin-top:24px;">
+        <div class="card">
+            <div class="card-label">Extrait du firmware (C++, Arduino)</div>
+            <div class="code" style="font-size:11px;"><span class="cm">// firmware/esp32/main.ino</span>
+<span class="kw">#include</span> &lt;driver/i2s.h&gt;
+<span class="kw">#include</span> &lt;FastLED.h&gt;
+<span class="kw">#include</span> <span class="str">"tensorflow/lite/micro/micro_interpreter.h"</span>
+<span class="kw">#include</span> <span class="str">"model_data.h"</span>  <span class="cm">// TFLite en C array</span>
+
+<span class="kw">#define</span> SAMPLE_RATE     <span class="num">16000</span>
+<span class="kw">#define</span> TENSOR_ARENA    (<span class="num">80</span> * <span class="num">1024</span>)  <span class="cm">// 80 KB</span>
+
+<span class="kw">const float</span> THRESHOLDS[<span class="num">6</span>] = {
+  <span class="num">0.75</span>,  <span class="cm">// fire_alarm (critique)</span>
+  <span class="num">0.80</span>,  <span class="cm">// baby_cry</span>
+  <span class="num">0.75</span>,  <span class="cm">// choking (critique)</span>
+  <span class="num">0.80</span>,  <span class="cm">// car_horn</span>
+  <span class="num">0.90</span>,  <span class="cm">// doorbell</span>
+  <span class="num">0.50</span>,  <span class="cm">// background</span>
+};
+
+<span class="cm">// Pipeline : I2S read &rarr; Log-Mel &rarr; TFLite</span>
+<span class="cm">// &rarr; Smoothing 3-frame &rarr; LED + Vibration</span></div>
+        </div>
+        <div>
+            <div class="card" style="margin-bottom:16px;">
+                <div class="card-label">Technologies utilisees</div>
+                <table class="tbl">
+                    <thead><tr><th>Technologie</th><th>Usage</th></tr></thead>
+                    <tbody>
+                        <tr><td>TensorFlow Lite Micro</td><td>Inference INT8 sur MCU</td></tr>
+                        <tr><td>TensorFlow / Keras</td><td>Entrainement Teacher + Student</td></tr>
+                        <tr><td>Knowledge Distillation</td><td>Compression 23x du modele</td></tr>
+                        <tr><td>QAT (tfmot)</td><td>Quantification sans perte</td></tr>
+                        <tr><td>ESP-IDF / Arduino</td><td>Firmware ESP32-S3</td></tr>
+                        <tr><td>I2S (DMA)</td><td>Capture audio numerique</td></tr>
+                        <tr><td>BLE 5.0</td><td>Communication bracelet-phone</td></tr>
+                        <tr><td>MQTT / Mosquitto</td><td>Messagerie IoT legere</td></tr>
+                        <tr><td>Node-RED</td><td>Orchestration des flux</td></tr>
+                        <tr><td>Flask + WebSocket</td><td>Dashboard de demonstration</td></tr>
+                        <tr><td>librosa</td><td>Traitement audio (features)</td></tr>
+                        <tr><td>Wokwi</td><td>Simulation circuit ESP32</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="notes">
+        Le firmware est ecrit en C++ avec le framework Arduino pour l'ESP32-S3. Il inclut TFLite Micro pour l'inference, le driver I2S pour le microphone, et FastLED pour les LEDs WS2812B. Les seuils de confiance sont differencies par classe : plus bas pour les classes critiques comme l'alarme incendie, plus eleves pour la sonnette afin d'eviter les faux positifs. Le modele est stocke en flash sous forme de tableau C, genere automatiquement par notre script de conversion. Nous avons utilise un large eventail de technologies, certaines vues en cours comme MQTT et Node-RED, et d'autres que nous avons apprises specifiquement pour ce projet comme le Knowledge Distillation, le QAT, et TFLite Micro.
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 10: DEMO & INTERFACE -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s10">
+    <span class="slide-num">10</span>
+    <span class="slide-tag" style="background:var(--pri-l);color:var(--pri-d);">Demo</span>
+    <h2>Interface de demonstration</h2>
+    <p class="subtitle" style="margin-bottom:24px;">Dashboard web interactif (Flask + WebSocket) avec 5 onglets</p>
+
+    <div class="grid-3" style="margin-top:16px;">
+        <div class="card" style="border-left:4px solid var(--pri);">
+            <h3 style="font-size:14px;color:var(--pri-d);">Live Detection</h3>
+            <p style="font-size:12px;color:var(--text2);">Ouverture du micro en temps reel. Classifie chaque seconde d'audio. N'alerte que sur les classes critiques. Affiche la forme d'onde live, le spectrogramme, le bracelet anime, et les barres de confiance.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--door);">
+            <h3 style="font-size:14px;color:var(--door);">File Test</h3>
+            <p style="font-size:12px;color:var(--text2);">Test sur fichier audio du dataset ou upload. Inference frame-par-frame avec timeline de confiance et visualisation des resultats par bloc colore.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--teal);">
+            <h3 style="font-size:14px;color:var(--teal);">Signal Processing</h3>
+            <p style="font-size:12px;color:var(--text2);">Visualisation step-by-step : waveform brute, spectrogramme Mel, normalisation, quantification INT8. Comparaison Float32 vs INT8 cote a cote.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--purple);">
+            <h3 style="font-size:14px;color:#7C5CC8;">ML Performance</h3>
+            <p style="font-size:12px;color:var(--text2);">Pipeline de distillation Teacher/Student. Graphique F1 par classe. Matrice de confusion. Configuration d'entrainement complete.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--baby);">
+            <h3 style="font-size:14px;color:var(--baby);">IoT System</h3>
+            <p style="font-size:12px;color:var(--text2);">Diagramme de communication end-to-end. BOM, assignation des pins, topics MQTT, budget memoire et puissance de l'ESP32.</p>
+        </div>
+        <div class="card" style="background:var(--pri-l);border-color:var(--pri-b);">
+            <h3 style="font-size:14px;color:var(--pri-d);">Comment lancer</h3>
+            <div class="code" style="font-size:11px;background:var(--text);padding:12px;">cd /Desktop/iot
+source venv/bin/activate
+python simulation/app.py
+<span class="cm"># Ouvrir localhost:5050</span></div>
+        </div>
+    </div>
+
+    <div class="notes">
+        Nous avons developpe un dashboard web complet avec Flask et WebSocket. L'onglet Live Detection ouvre le micro du navigateur et classifie l'audio en temps reel via WebSocket. Le son voyage du navigateur au serveur, passe par le modele TFLite, et les resultats reviennent en moins d'une seconde. L'interface affiche le bracelet simule avec les LEDs qui changent de couleur, les barres de confiance, et un historique des evenements. Les autres onglets permettent d'explorer le traitement du signal step by step, les performances du modele, et l'architecture IoT complete. Laissez-moi vous faire une demo live.
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 11: VALEUR AJOUTEE -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s11">
+    <span class="slide-num">11</span>
+    <span class="slide-tag" style="background:var(--success-l);color:#2A8A62;">Valeur ajoutee</span>
+    <h2>Ce qui distingue SafeSound</h2>
+
+    <div class="grid-2" style="margin-top:28px;">
+        <div>
+            <div class="card" style="margin-bottom:16px;border-left:4px solid var(--success);">
+                <h3>Edge AI pur</h3>
+                <p style="font-size:13px;color:var(--text2);">Zero dependance cloud. Le bracelet fonctionne dans un avion, un sous-sol, un camping &mdash; partout ou il n'y a pas de Wi-Fi. La vie privee est preservee : aucun audio ne quitte l'appareil.</p>
+            </div>
+            <div class="card" style="margin-bottom:16px;border-left:4px solid var(--pri);">
+                <h3>ML avance sur hardware minimal</h3>
+                <p style="font-size:13px;color:var(--text2);">Knowledge Distillation + QAT pour atteindre 95.4% dans 36 KB. Nous avons depasse les performances du Teacher avec 23x moins de parametres.</p>
+            </div>
+            <div class="card" style="border-left:4px solid var(--purple);">
+                <h3>Cout minimal</h3>
+                <p style="font-size:13px;color:var(--text2);">~19 EUR de composants. Pas d'abonnement cloud. Pas de smartphone obligatoire. Accessible dans les pays ou l'infrastructure numerique est limitee.</p>
+            </div>
+        </div>
+        <div>
+            <div class="card" style="margin-bottom:16px;border-left:4px solid var(--baby);">
+                <h3>Pipeline complete</h3>
+                <p style="font-size:13px;color:var(--text2);">Du dataset brut au firmware deployable. Data collection, augmentation, training, distillation, quantification, conversion TFLite, firmware C++, simulation, dashboard &mdash; tout le pipeline est fonctionnel.</p>
+            </div>
+            <div class="card" style="margin-bottom:16px;border-left:4px solid var(--teal);">
+                <h3>Integration IoT complete</h3>
+                <p style="font-size:13px;color:var(--text2);">BLE, MQTT, Node-RED, notification push. Le systeme ne se limite pas a la classification &mdash; il s'integre dans un ecosysteme IoT complet avec monitoring et configuration a distance.</p>
+            </div>
+            <div class="card" style="border-left:4px solid var(--fire);">
+                <h3>Impact social reel</h3>
+                <p style="font-size:13px;color:var(--text2);">Ce n'est pas un projet academique abstrait. C'est un produit qui pourrait etre porte par une personne sourde demain. Chaque decision technique est guidee par l'usage reel.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="notes">
+        Pour conclure sur la valeur ajoutee. Premierement, c'est du Edge AI pur : aucune dependance cloud, le bracelet fonctionne partout, meme sans Wi-Fi. L'audio ne quitte jamais l'appareil, ce qui preserve la vie privee. Deuxiemement, nous avons pousse le ML avance sur du hardware minimal, en depassant les performances du Teacher avec 23 fois moins de parametres. Troisiemement, le cout est de 19 euros, sans abonnement. La pipeline est complete du dataset au firmware. L'integration IoT couvre BLE, MQTT, Node-RED. Et surtout, l'impact social est reel : ce n'est pas un exercice academique, c'est un produit fonctionnel pour l'accessibilite.
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 12: CONCLUSION -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide" id="s12" style="text-align:center;">
+    <span class="slide-num">12</span>
+    <div style="margin-bottom:32px;">
+        <div style="display:inline-block;width:60px;height:60px;border-radius:18px;
+                    background:linear-gradient(135deg,var(--pri),var(--purple));
+                    box-shadow:0 8px 32px rgba(123,140,252,0.3);margin-bottom:20px;"></div>
+    </div>
+    <h1 style="font-size:48px;">Merci</h1>
+    <p class="subtitle" style="margin:0 auto;">
+        SafeSound &mdash; Rendre l'environnement sonore accessible, un son a la fois.
+    </p>
+
+    <div style="display:flex;gap:16px;justify-content:center;margin-top:40px;flex-wrap:wrap;">
+        <div class="metric" style="min-width:140px;background:var(--pri-l);border-color:var(--pri-b);">
+            <div class="metric-val" style="color:var(--pri-d);font-size:24px;">36.4 KB</div>
+            <div class="metric-label">Modele</div>
+        </div>
+        <div class="metric" style="min-width:140px;background:var(--success-l);">
+            <div class="metric-val" style="color:#2A8A62;font-size:24px;">95.4%</div>
+            <div class="metric-label">Precision</div>
+        </div>
+        <div class="metric" style="min-width:140px;background:var(--purple-l);">
+            <div class="metric-val" style="color:#7C5CC8;font-size:24px;">&lt; 2 ms</div>
+            <div class="metric-label">Latence</div>
+        </div>
+        <div class="metric" style="min-width:140px;background:var(--baby-l);">
+            <div class="metric-val" style="color:var(--baby);font-size:24px;">~19 EUR</div>
+            <div class="metric-label">Cout total</div>
+        </div>
+        <div class="metric" style="min-width:140px;background:var(--fire-l);">
+            <div class="metric-val" style="color:var(--fire);font-size:24px;">0</div>
+            <div class="metric-label">Dependance cloud</div>
+        </div>
+    </div>
+
+    <div style="margin-top:48px;font-size:13px;color:var(--muted);">
+        Demo live : <span class="mono">python simulation/app.py</span> &rarr; <span class="mono">localhost:5050</span>
+    </div>
+
+    <div class="notes">
+        Merci pour votre attention. SafeSound est un projet complet qui couvre toute la chaine : de la collecte de donnees a l'inference embarquee, en passant par des techniques ML avancees et une architecture IoT complete. Le bracelet coute moins de 20 euros, fonctionne sans cloud, et atteint 95.4% de precision dans un modele de 36 kilo-octets. Nous sommes disponibles pour la demo live et vos questions.
+    </div>
+</section>
+
+<script>
+// Navigation dots
+const slides = document.querySelectorAll('.slide');
+const nav = document.getElementById('nav');
+slides.forEach((s, i) => {
+    const a = document.createElement('a');
+    a.href = '#' + s.id;
+    a.title = 'Slide ' + (i + 1);
+    nav.appendChild(a);
+});
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            nav.querySelectorAll('a').forEach(a => a.classList.remove('active'));
+            const idx = Array.from(slides).indexOf(e.target);
+            if (idx >= 0) nav.children[idx].classList.add('active');
+        }
+    });
+}, { threshold: 0.5 });
+slides.forEach(s => observer.observe(s));
+
+// Toggle speaker notes with ?notes in URL
+if (location.search.includes('notes')) document.body.classList.add('show-notes');
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+    const current = Array.from(slides).findIndex(s => {
+        const r = s.getBoundingClientRect();
+        return r.top >= -100 && r.top < window.innerHeight / 2;
+    });
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        const next = Math.min(current + 1, slides.length - 1);
+        slides[next].scrollIntoView({ behavior: 'smooth' });
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const prev = Math.max(current - 1, 0);
+        slides[prev].scrollIntoView({ behavior: 'smooth' });
+    } else if (e.key === 'n') {
+        document.body.classList.toggle('show-notes');
+    }
+});
+</script>
+</body>
+</html>

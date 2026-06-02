@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "author": "SafeSound - Sound Alert System for the Hearing-Impaired",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-s3-devkitc-1",
+      "id": "esp",
+      "top": 0,
+      "left": 200,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-neopixel",
+      "id": "led_strip",
+      "top": -160,
+      "left": 120,
+      "attrs": { "pixels": "8" }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "vibration_motor",
+      "top": -160,
+      "left": 380,
+      "attrs": { "volume": "0.05" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r_motor",
+      "top": -100,
+      "left": 420,
+      "attrs": { "value": "100" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_status",
+      "top": -60,
+      "left": 0,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r_status",
+      "top": -30,
+      "left": -50,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_mode",
+      "top": 200,
+      "left": -20,
+      "attrs": { "color": "blue", "label": "MODE" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_test",
+      "top": 200,
+      "left": 80,
+      "attrs": { "color": "red", "label": "TEST" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_charging",
+      "top": 200,
+      "left": 500,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r_charging",
+      "top": 200,
+      "left": 540,
+      "attrs": { "value": "220" }
+    }
+  ],
+  "connections": [
+    ["esp:5", "led_strip:DIN", "green", ["v-40", "h-30"]],
+    ["esp:GND.1", "led_strip:VSS", "black", ["v-30", "h-40"]],
+    ["esp:3V3", "led_strip:VDD", "red", ["v-20", "h-50"]],
+
+    ["esp:6", "r_motor:1", "orange", ["v-40", "h80"]],
+    ["r_motor:2", "vibration_motor:1", "orange", ["v-20"]],
+    ["esp:GND.2", "vibration_motor:2", "black", ["v-30", "h90"]],
+
+    ["esp:7", "r_status:1", "blue", ["v0", "h-100"]],
+    ["r_status:2", "led_status:A", "blue", ["v0"]],
+    ["led_status:C", "esp:GND.3", "black", ["v20", "h100"]],
+
+    ["esp:4", "btn_mode:1.l", "purple", ["v60", "h-120"]],
+    ["btn_mode:2.l", "esp:GND.4", "black", ["v70", "h-110"]],
+
+    ["esp:8", "btn_test:1.l", "yellow", ["v60", "h-60"]],
+    ["btn_test:2.l", "esp:GND.5", "black", ["v70", "h-50"]],
+
+    ["esp:15", "esp:15", "gray", ["v0"]],
+    ["esp:13", "esp:13", "gray", ["v0"]],
+    ["esp:14", "esp:14", "gray", ["v0"]],
+
+    ["esp:9", "r_charging:1", "red", ["v60", "h200"]],
+    ["r_charging:2", "led_charging:A", "red", ["v0"]],
+    ["led_charging:C", "esp:GND.6", "black", ["v80", "h180"]]
+  ]
+}

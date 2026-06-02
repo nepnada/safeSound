@@ -1,0 +1,430 @@
+{
+  "audio_source": "data/raw/background/synth_bg_office_013.wav",
+  "duration_sec": 8.05,
+  "total_frames": 15,
+  "alerts_count": 0,
+  "avg_latency_ms": 25.39,
+  "memory_kb": 48.3,
+  "results": [
+    {
+      "frame_id": 0,
+      "timestamp_ms": 0,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.06640625,
+        0.0,
+        0.00390625,
+        0.9296875
+      ],
+      "smoothed_probs": [
+        0.1111111111111111,
+        0.1111111111111111,
+        0.13324652777777776,
+        0.1111111111111111,
+        0.11241319444444443,
+        0.4210069444444445
+      ],
+      "predicted_class": "background",
+      "confidence": 0.4210069444444445,
+      "threshold": 0.5,
+      "alert_triggered": false,
+      "latency_host_ms": 3.65,
+      "latency_esp32_est_ms": 29.19,
+      "led_state": "\u001b[90m\u2500\u2500\u2500\u2500\u2500 OFF",
+      "vibro_state": "\u2500\u2500 (none)"
+    },
+    {
+      "frame_id": 1,
+      "timestamp_ms": 500,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0078125,
+        0.0,
+        0.0,
+        0.98828125
+      ],
+      "smoothed_probs": [
+        0.05555555555555555,
+        0.05555555555555555,
+        0.08029513888888888,
+        0.05555555555555555,
+        0.05685763888888889,
+        0.6948784722222222
+      ],
+      "predicted_class": "background",
+      "confidence": 0.6948784722222222,
+      "threshold": 0.5,
+      "alert_triggered": false,
+      "latency_host_ms": 7.5,
+      "latency_esp32_est_ms": 59.96,
+      "led_state": "\u001b[90m\u2500\u2500\u2500\u2500\u2500 OFF",
+      "vibro_state": "\u2500\u2500 (none)"
+    },
+    {
+      "frame_id": 2,
+      "timestamp_ms": 1000,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.04296875,
+        0.0,
+        0.0,
+        0.95703125
+      ],
+      "smoothed_probs": [
+        0.0,
+        0.0,
+        0.0390625,
+        0.0,
+        0.0013020833333333333,
+        0.9583333333333334
+      ],
+      "predicted_class": "background",
+      "confidence": 0.9583333333333334,
+      "threshold": 0.5,
+      "alert_triggered": false,
+      "latency_host_ms": 1.48,
+      "latency_esp32_est_ms": 11.83,
+      "led_state": "\u001b[90m\u2500\u2500\u2500\u2500\u2500 OFF",
+      "vibro_state": "\u2500\u2500 (none)"
+    },
+    {
+      "frame_id": 3,
+      "timestamp_ms": 1500,
+      "raw_probs": [
+        0.0078125,
+        0.0,
+        0.48828125,
+        0.04296875,
+        0.06640625,
+        0.390625
+      ],
+      "smoothed_probs": [
+        0.0026041666666666665,
+        0.0,
+        0.1796875,
+        0.014322916666666666,
+        0.022135416666666668,
+        0.7786458333333334
+      ],
+      "predicted_class": "background",
+      "confidence": 0.7786458333333334,
+      "threshold": 0.5,
+      "alert_triggered": false,
+      "latency_host_ms": 1.4,
+      "latency_esp32_est_ms": 11.22,
+      "led_state": "\u001b[90m\u2500\u2500\u2500\u2500\u2500 OFF",
+      "vibro_state": "\u2500\u2500 (none)"
+    },
+    {
+      "frame_id": 4,
+      "timestamp_ms": 2000,
+      "raw_probs": [
+        0.0078125,
+        0.0,
+        0.484375,
+        0.03515625,
+        0.08203125,
+        0.390625
+      ],
+      "smoothed_probs": [
+        0.005208333333333333,
+        0.0,
+        0.3385416666666667,
+        0.026041666666666668,
+        0.049479166666666664,
+        0.5794270833333334
+      ],
+      "predicted_class": "background",
+      "confidence": 0.5794270833333334,
+      "threshold": 0.5,
+      "alert_triggered": false,
+      "latency_host_ms": 2.41,
+      "latency_esp32_est_ms": 19.31,
+      "led_state": "\u001b[90m\u2500\u2500\u2500\u2500\u2500 OFF",
+      "vibro_state": "\u2500\u2500 (none)"
+    },
+    {
+      "frame_id": 5,
+      "timestamp_ms": 2500,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.55859375,
+        0.0234375,
+        0.015625,
+        0.3984375
+      ],
+      "smoothed_probs": [
+        0.005208333333333333,
+        0.0,
+        0.5104166666666666,
+        0.033854166666666664,
+        0.0546875,
+        0.3932291666666667
+      ],
+      "predicted_class": "choking",
+      "confidence": 0.5104166666666666,
+      "threshold": 0.75,
+      "alert_triggered": false,
+      "latency_host_ms": 2.91,
+      "latency_esp32_est_ms": 23.28,
+      "led_state": "\u001b[95m\u2588\u2588\u2588\u2588\u2588 PURPLE",
+      "vibro_state": "\u2593\u2593\u2593\u2593\u2593 (5 pulses \u2014 CRITICAL)"
+    },
+    {
+      "frame_id": 6,
+      "timestamp_ms": 3000,
+      "raw_probs": [
+        0.01953125,
+        0.0,
+        0.34765625,
+        0.0234375,
+        0.01171875,
+        0.6015625
+      ],
+      "smoothed_probs": [
+        0.009114583333333334,
+        0.0,
+        0.4635416666666667,
+        0.02734375,
+        0.036458333333333336,
+        0.4635416666666667
+      ],
+      "predicted_class": "choking",
+      "confidence": 0.4635416666666667,
+      "threshold": 0.75,
+      "alert_triggered": false,
+      "latency_host_ms": 1.46,
+      "latency_esp32_est_ms": 11.68,
+      "led_state": "\u001b[95m\u2588\u2588\u2588\u2588\u2588 PURPLE",
+      "vibro_state": "\u2593\u2593\u2593\u2593\u2593 (5 pulses \u2014 CRITICAL)"
+    },
+    {
+      "frame_id": 7,
+      "timestamp_ms": 3500,
+      "raw_probs": [
+        0.01171875,
+        0.0,
+        0.37109375,
+        0.01171875,
+        0.13671875,
+        0.46484375
+      ],
+      "smoothed_probs": [
+        0.010416666666666666,
+        0.0,
+        0.42578125,
+        0.01953125,
+        0.0546875,
+        0.48828125
+      ],
+      "predicted_class": "background",
+      "confidence": 0.48828125,
+      "threshold": 0.5,
+      "alert_triggered": false,
+      "latency_host_ms": 5.61,
+      "latency_esp32_est_ms": 44.87,
+      "led_state": "\u001b[90m\u2500\u2500\u2500\u2500\u2500 OFF",
+      "vibro_state": "\u2500\u2500 (none)"
+    },
+    {
+      "frame_id": 8,
+      "timestamp_ms": 4000,
+      "raw_probs": [
+        0.00390625,
+        0.00390625,
+        0.09765625,
+        0.00390625,
+        0.015625,
+        0.87890625
+      ],
+      "smoothed_probs": [
+        0.01171875,
+        0.0013020833333333333,
+        0.2721354166666667,
+        0.013020833333333334,
+        0.0546875,
+        0.6484375
+      ],
+      "predicted_class": "background",
+      "confidence": 0.6484375,
+      "threshold": 0.5,
+      "alert_triggered": false,
+      "latency_host_ms": 3.0,
+      "latency_esp32_est_ms": 24.02,
+      "led_state": "\u001b[90m\u2500\u2500\u2500\u2500\u2500 OFF",
+      "vibro_state": "\u2500\u2500 (none)"
+    },
+    {
+      "frame_id": 9,
+      "timestamp_ms": 4500,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.12109375,
+        0.00390625,
+        0.00390625,
+        0.875
+      ],
+      "smoothed_probs": [
+        0.005208333333333333,
+        0.0013020833333333333,
+        0.19661458333333334,
+        0.006510416666666667,
+        0.052083333333333336,
+        0.7395833333333334
+      ],
+      "predicted_class": "background",
+      "confidence": 0.7395833333333334,
+      "threshold": 0.5,
+      "alert_triggered": false,
+      "latency_host_ms": 2.03,
+      "latency_esp32_est_ms": 16.24,
+      "led_state": "\u001b[90m\u2500\u2500\u2500\u2500\u2500 OFF",
+      "vibro_state": "\u2500\u2500 (none)"
+    },
+    {
+      "frame_id": 10,
+      "timestamp_ms": 5000,
+      "raw_probs": [
+        0.00390625,
+        0.0,
+        0.1171875,
+        0.00390625,
+        0.015625,
+        0.86328125
+      ],
+      "smoothed_probs": [
+        0.0026041666666666665,
+        0.0013020833333333333,
+        0.11197916666666667,
+        0.00390625,
+        0.01171875,
+        0.8723958333333334
+      ],
+      "predicted_class": "background",
+      "confidence": 0.8723958333333334,
+      "threshold": 0.5,
+      "alert_triggered": false,
+      "latency_host_ms": 1.75,
+      "latency_esp32_est_ms": 14.03,
+      "led_state": "\u001b[90m\u2500\u2500\u2500\u2500\u2500 OFF",
+      "vibro_state": "\u2500\u2500 (none)"
+    },
+    {
+      "frame_id": 11,
+      "timestamp_ms": 5500,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.01171875,
+        0.0,
+        0.0,
+        0.984375
+      ],
+      "smoothed_probs": [
+        0.0013020833333333333,
+        0.0,
+        0.08333333333333333,
+        0.0026041666666666665,
+        0.006510416666666667,
+        0.9075520833333334
+      ],
+      "predicted_class": "background",
+      "confidence": 0.9075520833333334,
+      "threshold": 0.5,
+      "alert_triggered": false,
+      "latency_host_ms": 3.4,
+      "latency_esp32_est_ms": 27.23,
+      "led_state": "\u001b[90m\u2500\u2500\u2500\u2500\u2500 OFF",
+      "vibro_state": "\u2500\u2500 (none)"
+    },
+    {
+      "frame_id": 12,
+      "timestamp_ms": 6000,
+      "raw_probs": [
+        0.00390625,
+        0.0,
+        0.15625,
+        0.0078125,
+        0.0234375,
+        0.8125
+      ],
+      "smoothed_probs": [
+        0.0026041666666666665,
+        0.0,
+        0.09505208333333333,
+        0.00390625,
+        0.013020833333333334,
+        0.88671875
+      ],
+      "predicted_class": "background",
+      "confidence": 0.88671875,
+      "threshold": 0.5,
+      "alert_triggered": false,
+      "latency_host_ms": 4.69,
+      "latency_esp32_est_ms": 37.55,
+      "led_state": "\u001b[90m\u2500\u2500\u2500\u2500\u2500 OFF",
+      "vibro_state": "\u2500\u2500 (none)"
+    },
+    {
+      "frame_id": 13,
+      "timestamp_ms": 6500,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.01171875,
+        0.0,
+        0.0,
+        0.984375
+      ],
+      "smoothed_probs": [
+        0.0013020833333333333,
+        0.0,
+        0.059895833333333336,
+        0.0026041666666666665,
+        0.0078125,
+        0.9270833333333334
+      ],
+      "predicted_class": "background",
+      "confidence": 0.9270833333333334,
+      "threshold": 0.5,
+      "alert_triggered": false,
+      "latency_host_ms": 4.1,
+      "latency_esp32_est_ms": 32.78,
+      "led_state": "\u001b[90m\u2500\u2500\u2500\u2500\u2500 OFF",
+      "vibro_state": "\u2500\u2500 (none)"
+    },
+    {
+      "frame_id": 14,
+      "timestamp_ms": 7000,
+      "raw_probs": [
+        0.04296875,
+        0.0,
+        0.43359375,
+        0.0234375,
+        0.11328125,
+        0.38671875
+      ],
+      "smoothed_probs": [
+        0.015625,
+        0.0,
+        0.20052083333333334,
+        0.010416666666666666,
+        0.045572916666666664,
+        0.7278645833333334
+      ],
+      "predicted_class": "background",
+      "confidence": 0.7278645833333334,
+      "threshold": 0.5,
+      "alert_triggered": false,
+      "latency_host_ms": 2.21,
+      "latency_esp32_est_ms": 17.69,
+      "led_state": "\u001b[90m\u2500\u2500\u2500\u2500\u2500 OFF",
+      "vibro_state": "\u2500\u2500 (none)"
+    }
+  ]
+}

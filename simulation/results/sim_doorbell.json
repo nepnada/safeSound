@@ -1,0 +1,262 @@
+{
+  "audio_source": "data/raw/doorbell/esc50_1-21421-A-46.wav",
+  "duration_sec": 5.0,
+  "total_frames": 9,
+  "alerts_count": 7,
+  "avg_latency_ms": 27.47,
+  "memory_kb": 48.3,
+  "results": [
+    {
+      "frame_id": 0,
+      "timestamp_ms": 0,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.1111111111111111,
+        0.1111111111111111,
+        0.1111111111111111,
+        0.1111111111111111,
+        0.44314236111111116,
+        0.1111111111111111
+      ],
+      "predicted_class": "doorbell",
+      "confidence": 0.44314236111111116,
+      "threshold": 0.9,
+      "alert_triggered": false,
+      "latency_host_ms": 1.3,
+      "latency_esp32_est_ms": 10.37,
+      "led_state": "\u001b[94m\u2588\u2588\u2588\u2588\u2588 BLUE",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 1,
+      "timestamp_ms": 500,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.05555555555555555,
+        0.05555555555555555,
+        0.05555555555555555,
+        0.05555555555555555,
+        0.7196180555555555,
+        0.05555555555555555
+      ],
+      "predicted_class": "doorbell",
+      "confidence": 0.7196180555555555,
+      "threshold": 0.9,
+      "alert_triggered": false,
+      "latency_host_ms": 3.84,
+      "latency_esp32_est_ms": 30.75,
+      "led_state": "\u001b[94m\u2588\u2588\u2588\u2588\u2588 BLUE",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 2,
+      "timestamp_ms": 1000,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "predicted_class": "doorbell",
+      "confidence": 0.99609375,
+      "threshold": 0.9,
+      "alert_triggered": true,
+      "latency_host_ms": 5.65,
+      "latency_esp32_est_ms": 45.22,
+      "led_state": "\u001b[94m\u2588\u2588\u2588\u2588\u2588 BLUE",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 3,
+      "timestamp_ms": 1500,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "predicted_class": "doorbell",
+      "confidence": 0.99609375,
+      "threshold": 0.9,
+      "alert_triggered": true,
+      "latency_host_ms": 2.62,
+      "latency_esp32_est_ms": 20.96,
+      "led_state": "\u001b[94m\u2588\u2588\u2588\u2588\u2588 BLUE",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 4,
+      "timestamp_ms": 2000,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "predicted_class": "doorbell",
+      "confidence": 0.99609375,
+      "threshold": 0.9,
+      "alert_triggered": true,
+      "latency_host_ms": 3.18,
+      "latency_esp32_est_ms": 25.42,
+      "led_state": "\u001b[94m\u2588\u2588\u2588\u2588\u2588 BLUE",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 5,
+      "timestamp_ms": 2500,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "predicted_class": "doorbell",
+      "confidence": 0.99609375,
+      "threshold": 0.9,
+      "alert_triggered": true,
+      "latency_host_ms": 2.72,
+      "latency_esp32_est_ms": 21.75,
+      "led_state": "\u001b[94m\u2588\u2588\u2588\u2588\u2588 BLUE",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 6,
+      "timestamp_ms": 3000,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "predicted_class": "doorbell",
+      "confidence": 0.99609375,
+      "threshold": 0.9,
+      "alert_triggered": true,
+      "latency_host_ms": 2.44,
+      "latency_esp32_est_ms": 19.49,
+      "led_state": "\u001b[94m\u2588\u2588\u2588\u2588\u2588 BLUE",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 7,
+      "timestamp_ms": 3500,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "predicted_class": "doorbell",
+      "confidence": 0.99609375,
+      "threshold": 0.9,
+      "alert_triggered": true,
+      "latency_host_ms": 5.29,
+      "latency_esp32_est_ms": 42.3,
+      "led_state": "\u001b[94m\u2588\u2588\u2588\u2588\u2588 BLUE",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 8,
+      "timestamp_ms": 4000,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0
+      ],
+      "predicted_class": "doorbell",
+      "confidence": 0.99609375,
+      "threshold": 0.9,
+      "alert_triggered": true,
+      "latency_host_ms": 3.87,
+      "latency_esp32_est_ms": 30.99,
+      "led_state": "\u001b[94m\u2588\u2588\u2588\u2588\u2588 BLUE",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    }
+  ]
+}

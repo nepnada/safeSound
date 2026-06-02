@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeSound — Design Picker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=Nunito+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Fira+Mono:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ── Picker Shell ──────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; font-family: 'Inter', sans-serif; background: #E8EAF0; }
+
+.shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+.shell.panel-right { flex-direction: row-reverse; }
+
+/* ── Side Panel ────────────────────────────────────── */
+.side-panel {
+  width: 310px;
+  min-width: 310px;
+  background: #1A1D27;
+  color: #E8EBF4;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.18);
+}
+.shell.panel-right .side-panel {
+  box-shadow: -4px 0 24px rgba(0,0,0,0.18);
+}
+
+.panel-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid #2E3247;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel-header-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #A0A8C0;
+}
+
+.side-toggle-btn {
+  background: #2E3247;
+  border: 1px solid #3A3F58;
+  color: #A0A8C0;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.side-toggle-btn:hover { background: #3A3F58; color: #fff; }
+
+.panel-section {
+  padding: 18px 20px;
+  border-bottom: 1px solid #2E3247;
+}
+.panel-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: #5B6280;
+  margin-bottom: 12px;
+}
+
+/* Font options */
+.font-options { display: flex; flex-direction: column; gap: 6px; }
+.font-btn {
+  padding: 10px 13px;
+  background: #222538;
+  border: 1.5px solid #2E3247;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.font-btn:hover { background: #2A2E45; border-color: #3D4263; }
+.font-btn.active {
+  background: #1E2F5C;
+  border-color: #3B6AE8;
+}
+.font-btn-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #C8D0E8;
+}
+.font-btn-sample {
+  font-size: 11px;
+  color: #5B6280;
+}
+.font-btn.active .font-btn-name { color: #7AAAF8; }
+.font-btn.active .font-btn-sample { color: #4A7AE0; }
+
+/* Palette grid */
+.palette-grid { display: flex; flex-direction: column; gap: 6px; }
+.palette-btn {
+  padding: 11px 13px;
+  border-radius: 7px;
+  border: 1.5px solid #2E3247;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #222538;
+}
+.palette-btn:hover { background: #2A2E45; border-color: #3D4263; }
+.palette-btn.active { border-color: #3B6AE8; background: #1E2F5C; }
+.palette-swatches {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+.palette-info { flex: 1; }
+.palette-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #C8D0E8;
+  margin-bottom: 1px;
+}
+.palette-desc {
+  font-size: 10px;
+  color: #5B6280;
+}
+.palette-btn.active .palette-name { color: #7AAAF8; }
+
+/* Apply button */
+.panel-actions {
+  padding: 18px 20px;
+  margin-top: auto;
+  border-top: 1px solid #2E3247;
+}
+.apply-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #2D5BE3, #5B8AFF);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.3px;
+}
+.apply-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(45,91,227,0.4); }
+.apply-hint { font-size: 10px; color: #5B6280; text-align: center; margin-top: 8px; }
+
+/* ── Preview Area ──────────────────────────────────── */
+.preview-area {
+  flex: 1;
+  overflow: auto;
+  background: #CDD0DC;
+  padding: 28px;
+}
+
+.preview-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #7A7F98;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.preview-frame {
+  max-width: 960px;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s;
+}
+
+/* ══════════════════════════════════════════════════ */
+/*  PREVIEW CONTENT — mirrors the real dashboard     */
+/* ══════════════════════════════════════════════════ */
+
+.p-root {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100%;
+  transition: all 0.3s ease;
+}
+
+/* Header */
+.p-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+}
+.p-brand { display: flex; align-items: center; gap: 12px; }
+.p-logo {
+  width: 38px; height: 38px;
+  border-radius: var(--radius);
+  background: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.p-logo svg { width: 18px; height: 18px; fill: #fff; }
+.p-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: var(--title-spacing);
+  color: var(--text);
+}
+.p-subtitle { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.p-header-right { display: flex; align-items: center; gap: 10px; }
+.p-chip {
+  padding: 5px 12px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  font-family: var(--mono);
+}
+.p-chip.green {
+  background: var(--success-bg);
+  border-color: var(--success-border);
+  color: var(--success-text);
+}
+.p-status {
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 13px;
+  background: var(--success-bg);
+  border: 1px solid var(--success-border);
+  border-radius: 100px;
+  font-size: 11px; font-weight: 600;
+  color: var(--success-text);
+}
+.p-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 6px var(--success);
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+@keyframes dot-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* Tabs */
+.p-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 0 28px;
+  gap: 0;
+}
+.p-tab {
+  padding: 11px 18px;
+  font-size: 12px; font-weight: 500;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  display: flex; align-items: center; gap: 6px;
+}
+.p-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 700;
+}
+.p-tab svg { width: 13px; height: 13px; fill: currentColor; }
+
+/* Body */
+.p-body { padding: 22px 28px; background: var(--bg); }
+
+/* Pipeline */
+.p-pipeline {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; padding: 12px 20px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.p-pipe-step {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 8px 12px;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--bg-subtle); border: 1px solid var(--border-light);
+  min-width: 82px;
+}
+.p-pipe-step.active {
+  background: var(--primary-bg);
+  border-color: var(--primary-border);
+}
+.p-pipe-step.active .p-pipe-name { color: var(--primary); }
+.p-pipe-name { font-size: 11px; font-weight: 600; color: var(--text); }
+.p-pipe-detail { font-size: 9px; color: var(--text-muted); }
+.p-pipe-arrow { color: var(--border); font-size: 13px; padding: 0 5px; }
+
+/* Alert banner */
+.p-alert {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 18px;
+  background: var(--fire-bg);
+  border: 1px solid var(--fire-border);
+  border-radius: var(--radius);
+  margin-bottom: 18px;
+}
+.p-alert-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--fire);
+  animation: dot-pulse 1s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.p-alert-text { flex: 1; font-size: 14px; font-weight: 700; color: var(--fire); }
+.p-alert-conf { font-size: 13px; font-family: var(--mono); color: var(--fire); opacity: 0.8; }
+
+/* Dashboard grid */
+.p-grid {
+  display: grid;
+  grid-template-columns: 1fr 220px 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+/* Card */
+.p-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+.p-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--label-spacing);
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+/* Fake waveform */
+.p-wave {
+  width: 100%;
+  height: 70px;
+  background: var(--bg-subtle);
+  border-radius: calc(var(--radius) - 4px);
+  border: 1px solid var(--border-light);
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.p-wave-line {
+  position: absolute;
+  bottom: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--primary);
+  opacity: 0.4;
+}
+.p-wave-bars {
+  position: absolute;
+  inset: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px;
+}
+.p-wave-bar {
+  flex: 1;
+  background: var(--primary);
+  border-radius: 1px;
+  opacity: 0.6;
+}
+
+/* Spectrogram */
+.p-spec {
+  width: 100%;
+  height: 65px;
+  border-radius: calc(var(--radius) - 4px);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  position: relative;
+}
+.p-spec-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right,
+    var(--spec-low) 0%,
+    var(--spec-mid) 40%,
+    var(--spec-high) 70%,
+    var(--spec-peak) 100%
+  );
+  opacity: 0.8;
+}
+
+/* Bracelet */
+.p-bracelet-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.p-bracelet {
+  width: 100px;
+  height: 130px;
+  position: relative;
+  margin: 4px 0 10px;
+}
+.p-bracelet-body {
+  position: absolute;
+  inset: 0;
+  border: 3px solid var(--primary);
+  border-radius: 50px;
+  background: var(--primary-bg);
+  box-shadow: 0 0 20px var(--primary-glow);
+}
+.p-bracelet-leds {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 52px;
+  justify-content: center;
+}
+.p-led {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--fire);
+  box-shadow: 0 0 8px var(--fire);
+}
+.p-bracelet-class { font-size: 13px; font-weight: 700; color: var(--fire); margin-bottom: 2px; }
+.p-bracelet-conf { font-size: 22px; font-weight: 800; font-family: var(--mono); color: var(--primary); }
+.p-bracelet-meta { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.p-vibro {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 10px; font-weight: 600;
+  background: var(--fire-bg);
+  border: 1px solid var(--fire-border);
+  color: var(--fire);
+  margin-top: 6px;
+  animation: vibrate 0.15s linear infinite;
+}
+@keyframes vibrate { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-2px)} 75%{transform:translateX(2px)} }
+
+/* Confidence bars */
+.p-conf-bars { display: flex; flex-direction: column; gap: 9px; }
+.p-conf-row { display: flex; align-items: center; gap: 8px; }
+.p-conf-name { width: 72px; font-size: 11px; font-weight: 500; color: var(--text-secondary); text-align: right; white-space: nowrap; }
+.p-conf-track { flex: 1; height: 7px; background: var(--bg-subtle); border-radius: 100px; overflow: hidden; border: 1px solid var(--border-light); }
+.p-conf-fill { height: 100%; border-radius: 100px; transition: width 0.3s; }
+.p-conf-val { width: 38px; font-size: 11px; font-weight: 600; font-family: var(--mono); color: var(--text-muted); }
+.p-conf-row.top .p-conf-name { color: var(--text); font-weight: 700; }
+.p-conf-row.top .p-conf-val { color: var(--text); }
+
+/* Stats row */
+.p-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.p-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.p-stat-val { font-size: 20px; font-weight: 800; font-family: var(--mono); color: var(--text); }
+.p-stat-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
+
+/* Bottom grid */
+.p-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* Event log */
+.p-events { display: flex; flex-direction: column; gap: 5px; }
+.p-event {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 11px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: calc(var(--radius) - 2px);
+}
+.p-event-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.p-event-class { flex: 1; font-size: 12px; font-weight: 500; color: var(--text); }
+.p-event-conf { font-size: 11px; font-family: var(--mono); color: var(--text-secondary); }
+.p-event-time { font-size: 10px; color: var(--text-muted); font-family: var(--mono); }
+
+/* Resources */
+.p-res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.p-res-item {
+  text-align: center; padding: 12px 8px;
+  background: var(--bg-subtle);
+  border-radius: calc(var(--radius) - 2px);
+  border: 1px solid var(--border-light);
+}
+.p-res-val { font-size: 16px; font-weight: 800; font-family: var(--mono); color: var(--text); }
+.p-res-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 2px; }
+.p-res-bar { height: 5px; background: var(--border-light); border-radius: 3px; overflow: hidden; margin-top: 7px; }
+.p-res-fill { height: 100%; border-radius: 3px; }
+
+/* Footer */
+.p-footer {
+  border-top: 1px solid var(--border);
+  padding: 16px 28px;
+  background: var(--bg-card);
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+.p-footer-item { text-align: center; }
+.p-footer-val { font-size: 14px; font-weight: 800; font-family: var(--mono); color: var(--text); }
+.p-footer-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 1px; }
+
+</style>
+</head>
+<body>
+
+<div class="shell" id="shell">
+
+  <!-- ── Side Panel ─────────────────────────────── -->
+  <div class="side-panel">
+    <div class="panel-header">
+      <span class="panel-header-title">Design Picker</span>
+      <button class="side-toggle-btn" onclick="toggleSide()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        Côté
+      </button>
+    </div>
+
+    <!-- FONTS -->
+    <div class="panel-section">
+      <div class="panel-section-title">Police</div>
+      <div class="font-options">
+        <button class="font-btn" onclick="setFont('Inter','JetBrains Mono',this)" data-font="Inter">
+          <span class="font-btn-name" style="font-family:'Inter'">Inter</span>
+          <span class="font-btn-sample" style="font-family:'Inter'">Aa Bb 0123</span>
+        </button>
+        <button class="font-btn active" onclick="setFont('IBM Plex Sans','IBM Plex Mono',this)" data-font="IBM Plex Sans">
+          <span class="font-btn-name" style="font-family:'IBM Plex Sans'">IBM Plex Sans</span>
+          <span class="font-btn-sample" style="font-family:'IBM Plex Mono'">Aa Bb 0123</span>
+        </button>
+        <button class="font-btn" onclick="setFont('DM Sans','IBM Plex Mono',this)" data-font="DM Sans">
+          <span class="font-btn-name" style="font-family:'DM Sans'">DM Sans</span>
+          <span class="font-btn-sample" style="font-family:'IBM Plex Mono'">Aa Bb 0123</span>
+        </button>
+        <button class="font-btn" onclick="setFont('Source Sans 3','Fira Mono',this)" data-font="Source Sans 3">
+          <span class="font-btn-name" style="font-family:'Source Sans 3'">Source Sans 3</span>
+          <span class="font-btn-sample" style="font-family:'Fira Mono'">Aa Bb 0123</span>
+        </button>
+        <button class="font-btn" onclick="setFont('Space Grotesk','Roboto Mono',this)" data-font="Space Grotesk">
+          <span class="font-btn-name" style="font-family:'Space Grotesk'">Space Grotesk</span>
+          <span class="font-btn-sample" style="font-family:'Roboto Mono'">Aa Bb 0123</span>
+        </button>
+        <button class="font-btn" onclick="setFont('Nunito Sans','Fira Mono',this)" data-font="Nunito Sans">
+          <span class="font-btn-name" style="font-family:'Nunito Sans'">Nunito Sans</span>
+          <span class="font-btn-sample" style="font-family:'Fira Mono'">Aa Bb 0123</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- PALETTES -->
+    <div class="panel-section">
+      <div class="panel-section-title">Palette de couleurs</div>
+      <div class="palette-grid">
+
+        <button class="palette-btn" onclick="setPalette('current',this)">
+          <div class="palette-swatches">
+            <div class="swatch" style="background:#F7F8FC"></div>
+            <div class="swatch" style="background:#7B8CFC"></div>
+            <div class="swatch" style="background:#EF7070"></div>
+            <div class="swatch" style="background:#5EA0F0"></div>
+          </div>
+          <div class="palette-info">
+            <div class="palette-name">Actuel — Lavande</div>
+            <div class="palette-desc">Violet/bleu pastel, app consumer</div>
+          </div>
+        </button>
+
+        <button class="palette-btn active" onclick="setPalette('navy',this)">
+          <div class="palette-swatches">
+            <div class="swatch" style="background:#F4F6F9"></div>
+            <div class="swatch" style="background:#1D4ED8"></div>
+            <div class="swatch" style="background:#991B1B"></div>
+            <div class="swatch" style="background:#166534"></div>
+          </div>
+          <div class="palette-info">
+            <div class="palette-name">Academic Navy</div>
+            <div class="palette-desc">Bleu cobalt foncé, style IEEE/recherche</div>
+          </div>
+        </button>
+
+        <button class="palette-btn" onclick="setPalette('slate',this)">
+          <div class="palette-swatches">
+            <div class="swatch" style="background:#F8FAFB"></div>
+            <div class="swatch" style="background:#0F766E"></div>
+            <div class="swatch" style="background:#B91C1C"></div>
+            <div class="swatch" style="background:#1E40AF"></div>
+          </div>
+          <div class="palette-info">
+            <div class="palette-name">Slate & Teal</div>
+            <div class="palette-desc">Vert-bleu, style journal Nature/Science</div>
+          </div>
+        </button>
+
+        <button class="palette-btn" onclick="setPalette('carbon',this)">
+          <div class="palette-swatches">
+            <div class="swatch" style="background:#FAFAFA"></div>
+            <div class="swatch" style="background:#D97706"></div>
+            <div class="swatch" style="background:#DC2626"></div>
+            <div class="swatch" style="background:#374151"></div>
+          </div>
+          <div class="palette-info">
+            <div class="palette-name">Carbon & Amber</div>
+            <div class="palette-desc">Chaud, style IBM Research / ingénierie</div>
+          </div>
+        </button>
+
+        <button class="palette-btn" onclick="setPalette('midnight',this)">
+          <div class="palette-swatches">
+            <div class="swatch" style="background:#0F172A"></div>
+            <div class="swatch" style="background:#60A5FA"></div>
+            <div class="swatch" style="background:#F87171"></div>
+            <div class="swatch" style="background:#34D399"></div>
+          </div>
+          <div class="palette-info">
+            <div class="palette-name">Midnight — Dark</div>
+            <div class="palette-desc">Fond sombre, dashboard scientifique</div>
+          </div>
+        </button>
+
+        <button class="palette-btn" onclick="setPalette('forest',this)">
+          <div class="palette-swatches">
+            <div class="swatch" style="background:#F2F7F4"></div>
+            <div class="swatch" style="background:#15803D"></div>
+            <div class="swatch" style="background:#B91C1C"></div>
+            <div class="swatch" style="background:#1D4ED8"></div>
+          </div>
+          <div class="palette-info">
+            <div class="palette-name">Forest Research</div>
+            <div class="palette-desc">Vert foncé, calme et médical</div>
+          </div>
+        </button>
+
+        <button class="palette-btn" onclick="setPalette('graphite',this)">
+          <div class="palette-swatches">
+            <div class="swatch" style="background:#F5F5F5"></div>
+            <div class="swatch" style="background:#374151"></div>
+            <div class="swatch" style="background:#DC2626"></div>
+            <div class="swatch" style="background:#6B7280"></div>
+          </div>
+          <div class="palette-info">
+            <div class="palette-name">Graphite Minimal</div>
+            <div class="palette-desc">Gris neutre, monochrome scientifique</div>
+          </div>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- BORDER RADIUS -->
+    <div class="panel-section">
+      <div class="panel-section-title">Coins</div>
+      <div style="display:flex;gap:6px;">
+        <button class="font-btn" style="flex:1;justify-content:center;" onclick="setRadius('4px',this)" data-r="sharp">
+          <span class="font-btn-name">Nets</span>
+        </button>
+        <button class="font-btn active" style="flex:1;justify-content:center;" onclick="setRadius('8px',this)" data-r="medium">
+          <span class="font-btn-name">Moyens</span>
+        </button>
+        <button class="font-btn" style="flex:1;justify-content:center;" onclick="setRadius('14px',this)" data-r="round">
+          <span class="font-btn-name">Ronds</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel-actions">
+      <button class="apply-btn" onclick="copyConfig()">Copier la config choisie</button>
+      <div class="apply-hint" id="copyHint">Choisissez une palette et une police</div>
+    </div>
+  </div>
+
+  <!-- ── Preview Area ─────────────────────────────── -->
+  <div class="preview-area">
+    <div class="preview-label">Aperçu en temps réel — SafeSound Dashboard</div>
+    <div class="preview-frame">
+      <div class="p-root" id="preview">
+
+        <!-- Header -->
+        <div class="p-header">
+          <div class="p-brand">
+            <div class="p-logo">
+              <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h2v-2.06A9 9 0 0 0 21 12v-2h-2z"/></svg>
+            </div>
+            <div>
+              <div class="p-title">SafeSound</div>
+              <div class="p-subtitle">IoT Sound Alert Bracelet — ESP32-S3</div>
+            </div>
+          </div>
+          <div class="p-header-right">
+            <span class="p-chip">TFLite INT8 · 36.4 KB</span>
+            <span class="p-chip green">95.4% Accuracy</span>
+            <div class="p-status">
+              <div class="p-dot"></div>
+              <span>Listening</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="p-tabs">
+          <div class="p-tab active">
+            <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/></svg>
+            Live Detection
+          </div>
+          <div class="p-tab">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg>
+            File Test
+          </div>
+          <div class="p-tab">
+            <svg viewBox="0 0 24 24"><path d="M2 12h4l3-8 4 16 3-8h4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            Signal Processing
+          </div>
+          <div class="p-tab">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+            ML Performance
+          </div>
+          <div class="p-tab">
+            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            IoT System
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="p-body">
+
+          <!-- Pipeline -->
+          <div class="p-pipeline">
+            <div class="p-pipe-step active">
+              <span class="p-pipe-name">Capture</span>
+              <span class="p-pipe-detail">16kHz Mono</span>
+            </div>
+            <span class="p-pipe-arrow">→</span>
+            <div class="p-pipe-step active">
+              <span class="p-pipe-name">Log-Mel</span>
+              <span class="p-pipe-detail">64 ch</span>
+            </div>
+            <span class="p-pipe-arrow">→</span>
+            <div class="p-pipe-step active">
+              <span class="p-pipe-name">DS-CNN</span>
+              <span class="p-pipe-detail">36.4 KB</span>
+            </div>
+            <span class="p-pipe-arrow">→</span>
+            <div class="p-pipe-step">
+              <span class="p-pipe-name">Smoothing</span>
+              <span class="p-pipe-detail">3-frame</span>
+            </div>
+            <span class="p-pipe-arrow">→</span>
+            <div class="p-pipe-step">
+              <span class="p-pipe-name">Alert</span>
+              <span class="p-pipe-detail">LED+Vibro</span>
+            </div>
+          </div>
+
+          <!-- Alert banner -->
+          <div class="p-alert">
+            <div class="p-alert-dot"></div>
+            <span class="p-alert-text">🔥 Fire Alarm — CRITICAL</span>
+            <span class="p-alert-conf">conf: 0.871</span>
+          </div>
+
+          <!-- Main grid -->
+          <div class="p-grid">
+            <!-- Left: waveform + spectrogram -->
+            <div>
+              <div class="p-card" style="margin-bottom:12px;">
+                <div class="p-card-label">Live Waveform</div>
+                <div class="p-wave" id="waveBox">
+                  <div class="p-wave-bars" id="waveBars"></div>
+                </div>
+              </div>
+              <div class="p-card">
+                <div class="p-card-label">Log-Mel Spectrogram</div>
+                <div class="p-spec">
+                  <div class="p-spec-gradient"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Center: bracelet -->
+            <div class="p-card">
+              <div class="p-card-label">Bracelet Output</div>
+              <div class="p-bracelet-wrap">
+                <div class="p-bracelet">
+                  <div class="p-bracelet-body">
+                    <div class="p-bracelet-leds">
+                      <div class="p-led"></div><div class="p-led"></div><div class="p-led"></div><div class="p-led"></div>
+                      <div class="p-led"></div><div class="p-led"></div><div class="p-led"></div><div class="p-led"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-bracelet-class">Fire Alarm</div>
+                <div class="p-bracelet-conf">87.1%</div>
+                <div class="p-bracelet-meta">est. 14.2 ms · ESP32</div>
+                <div class="p-vibro">⚡ 5 rapid pulses</div>
+              </div>
+            </div>
+
+            <!-- Right: confidence bars -->
+            <div class="p-card">
+              <div class="p-card-label">Class Confidence</div>
+              <div class="p-conf-bars">
+                <div class="p-conf-row top">
+                  <span class="p-conf-name">Fire Alarm</span>
+                  <div class="p-conf-track"><div class="p-conf-fill" id="bar-fire" style="width:87%;"></div></div>
+                  <span class="p-conf-val">0.871</span>
+                </div>
+                <div class="p-conf-row">
+                  <span class="p-conf-name">Baby Cry</span>
+                  <div class="p-conf-track"><div class="p-conf-fill" id="bar-baby" style="width:6%;background:#F5A050;"></div></div>
+                  <span class="p-conf-val">0.062</span>
+                </div>
+                <div class="p-conf-row">
+                  <span class="p-conf-name">Choking</span>
+                  <div class="p-conf-track"><div class="p-conf-fill" id="bar-choke" style="width:3%;background:#EF7070;"></div></div>
+                  <span class="p-conf-val">0.031</span>
+                </div>
+                <div class="p-conf-row">
+                  <span class="p-conf-name">Car Horn</span>
+                  <div class="p-conf-track"><div class="p-conf-fill" id="bar-horn" style="width:2%;background:#E8C040;"></div></div>
+                  <span class="p-conf-val">0.018</span>
+                </div>
+                <div class="p-conf-row">
+                  <span class="p-conf-name">Doorbell</span>
+                  <div class="p-conf-track"><div class="p-conf-fill" id="bar-door" style="width:1%;background:#5EA0F0;"></div></div>
+                  <span class="p-conf-val">0.012</span>
+                </div>
+                <div class="p-conf-row">
+                  <span class="p-conf-name">Background</span>
+                  <div class="p-conf-track"><div class="p-conf-fill" id="bar-bg" style="width:1%;background:#A0AAB8;"></div></div>
+                  <span class="p-conf-val">0.006</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats row -->
+          <div class="p-stats">
+            <div class="p-stat">
+              <div class="p-stat-val">142</div>
+              <div class="p-stat-label">Frames</div>
+            </div>
+            <div class="p-stat">
+              <div class="p-stat-val">7</div>
+              <div class="p-stat-label">Alerts</div>
+            </div>
+            <div class="p-stat">
+              <div class="p-stat-val">14.2ms</div>
+              <div class="p-stat-label">Avg ESP32 Latency</div>
+            </div>
+            <div class="p-stat">
+              <div class="p-stat-val">71s</div>
+              <div class="p-stat-label">Duration</div>
+            </div>
+          </div>
+
+          <!-- Bottom grid -->
+          <div class="p-bottom">
+            <!-- Event log -->
+            <div class="p-card">
+              <div class="p-card-label">Detection Events</div>
+              <div class="p-events">
+                <div class="p-event">
+                  <div class="p-event-dot" style="background:#EF7070;"></div>
+                  <span class="p-event-class">Fire Alarm</span>
+                  <span class="p-event-conf">0.871</span>
+                  <span class="p-event-time">00:01:11</span>
+                </div>
+                <div class="p-event">
+                  <div class="p-event-dot" style="background:#F5A050;"></div>
+                  <span class="p-event-class">Baby Cry</span>
+                  <span class="p-event-conf">0.834</span>
+                  <span class="p-event-time">00:00:58</span>
+                </div>
+                <div class="p-event">
+                  <div class="p-event-dot" style="background:#EF7070;"></div>
+                  <span class="p-event-class">Fire Alarm</span>
+                  <span class="p-event-conf">0.912</span>
+                  <span class="p-event-time">00:00:44</span>
+                </div>
+                <div class="p-event">
+                  <div class="p-event-dot" style="background:#5EA0F0;"></div>
+                  <span class="p-event-class">Doorbell</span>
+                  <span class="p-event-conf">0.903</span>
+                  <span class="p-event-time">00:00:31</span>
+                </div>
+              </div>
+            </div>
+            <!-- Resources -->
+            <div class="p-card">
+              <div class="p-card-label">ESP32-S3 Resource Monitor</div>
+              <div class="p-res-grid">
+                <div class="p-res-item">
+                  <div class="p-res-val">48.3 KB</div>
+                  <div class="p-res-label">SRAM Used</div>
+                  <div class="p-res-bar"><div class="p-res-fill" style="width:9.4%;background:#22C55E;"></div></div>
+                </div>
+                <div class="p-res-item">
+                  <div class="p-res-val">240 MHz</div>
+                  <div class="p-res-label">CPU Clock</div>
+                  <div class="p-res-bar"><div class="p-res-fill" id="cpu-bar" style="width:12%;"></div></div>
+                </div>
+                <div class="p-res-item">
+                  <div class="p-res-val">87%</div>
+                  <div class="p-res-label">Battery</div>
+                  <div class="p-res-bar"><div class="p-res-fill" style="width:87%;background:#22C55E;"></div></div>
+                </div>
+                <div class="p-res-item">
+                  <div class="p-res-val">36.4 KB</div>
+                  <div class="p-res-label">Flash (Model)</div>
+                  <div class="p-res-bar"><div class="p-res-fill" id="flash-bar" style="width:7%;"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /p-body -->
+
+        <!-- Footer -->
+        <div class="p-footer">
+          <div class="p-footer-item">
+            <div class="p-footer-val">36.4 KB</div>
+            <div class="p-footer-label">Model Size</div>
+          </div>
+          <div class="p-footer-item">
+            <div class="p-footer-val">INT8</div>
+            <div class="p-footer-label">Quantization</div>
+          </div>
+          <div class="p-footer-item">
+            <div class="p-footer-val">18,086</div>
+            <div class="p-footer-label">Parameters</div>
+          </div>
+          <div class="p-footer-item">
+            <div class="p-footer-val">95.4%</div>
+            <div class="p-footer-label">Accuracy</div>
+          </div>
+          <div class="p-footer-item">
+            <div class="p-footer-val">&lt;2ms</div>
+            <div class="p-footer-label">ESP32 Latency</div>
+          </div>
+          <div class="p-footer-item">
+            <div class="p-footer-val">6</div>
+            <div class="p-footer-label">Classes</div>
+          </div>
+        </div>
+
+      </div><!-- /p-root -->
+    </div><!-- /preview-frame -->
+  </div><!-- /preview-area -->
+</div><!-- /shell -->
+
+<script>
+// ── Palettes ────────────────────────────────────────────────────────────────
+const PALETTES = {
+
+  current: {
+    '--bg':             '#F7F8FC',
+    '--bg-card':        '#FFFFFF',
+    '--bg-subtle':      '#F0F2F8',
+    '--border':         '#E2E6F0',
+    '--border-light':   '#ECEEF6',
+    '--text':           '#1E2A3B',
+    '--text-secondary': '#5B6B82',
+    '--text-muted':     '#95A0B4',
+    '--primary':        '#7B8CFC',
+    '--primary-bg':     '#EEF0FF',
+    '--primary-border': '#C8CFFE',
+    '--primary-glow':   'rgba(123,140,252,0.18)',
+    '--title-spacing':  '-0.3px',
+    '--label-spacing':  '1.2px',
+    '--fire':           '#EF7070',
+    '--fire-bg':        '#FFF0F0',
+    '--fire-border':    '#FCC',
+    '--success':        '#50D898',
+    '--success-bg':     '#EDFDF4',
+    '--success-border': '#A0ECC8',
+    '--success-text':   '#2A8A62',
+    '--shadow':         '0 1px 3px rgba(30,42,59,0.04), 0 4px 14px rgba(30,42,59,0.03)',
+    '--spec-low':       '#1a1a4e',
+    '--spec-mid':       '#2563EB',
+    '--spec-high':      '#7B8CFC',
+    '--spec-peak':      '#EEF0FF',
+  },
+
+  navy: {
+    '--bg':             '#F4F6F9',
+    '--bg-card':        '#FFFFFF',
+    '--bg-subtle':      '#EEF1F6',
+    '--border':         '#D1D9E6',
+    '--border-light':   '#E8ECF2',
+    '--text':           '#111827',
+    '--text-secondary': '#374151',
+    '--text-muted':     '#6B7280',
+    '--primary':        '#1D4ED8',
+    '--primary-bg':     '#EFF6FF',
+    '--primary-border': '#BFDBFE',
+    '--primary-glow':   'rgba(29,78,216,0.15)',
+    '--title-spacing':  '0px',
+    '--label-spacing':  '1.5px',
+    '--fire':           '#991B1B',
+    '--fire-bg':        '#FEF2F2',
+    '--fire-border':    '#FECACA',
+    '--success':        '#15803D',
+    '--success-bg':     '#F0FDF4',
+    '--success-border': '#BBF7D0',
+    '--success-text':   '#166534',
+    '--shadow':         '0 1px 3px rgba(17,24,39,0.06), 0 4px 12px rgba(17,24,39,0.04)',
+    '--spec-low':       '#0c1a4e',
+    '--spec-mid':       '#1D4ED8',
+    '--spec-high':      '#60A5FA',
+    '--spec-peak':      '#DBEAFE',
+  },
+
+  slate: {
+    '--bg':             '#F8FAFB',
+    '--bg-card':        '#FFFFFF',
+    '--bg-subtle':      '#F0F4F5',
+    '--border':         '#CBD5DC',
+    '--border-light':   '#E2EAEd',
+    '--text':           '#1E293B',
+    '--text-secondary': '#475569',
+    '--text-muted':     '#94A3B8',
+    '--primary':        '#0F766E',
+    '--primary-bg':     '#F0FDFA',
+    '--primary-border': '#99F6E4',
+    '--primary-glow':   'rgba(15,118,110,0.15)',
+    '--title-spacing':  '0px',
+    '--label-spacing':  '1.4px',
+    '--fire':           '#B91C1C',
+    '--fire-bg':        '#FEF2F2',
+    '--fire-border':    '#FECACA',
+    '--success':        '#0F766E',
+    '--success-bg':     '#F0FDFA',
+    '--success-border': '#99F6E4',
+    '--success-text':   '#0F766E',
+    '--shadow':         '0 1px 3px rgba(30,41,59,0.06), 0 4px 12px rgba(30,41,59,0.04)',
+    '--spec-low':       '#0c2e2b',
+    '--spec-mid':       '#0F766E',
+    '--spec-high':      '#2DD4BF',
+    '--spec-peak':      '#CCFBF1',
+  },
+
+  carbon: {
+    '--bg':             '#FAFAFA',
+    '--bg-card':        '#FFFFFF',
+    '--bg-subtle':      '#F5F3EF',
+    '--border':         '#D6D3CD',
+    '--border-light':   '#E7E5E1',
+    '--text':           '#1C1917',
+    '--text-secondary': '#44403C',
+    '--text-muted':     '#78716C',
+    '--primary':        '#B45309',
+    '--primary-bg':     '#FFFBEB',
+    '--primary-border': '#FDE68A',
+    '--primary-glow':   'rgba(180,83,9,0.12)',
+    '--title-spacing':  '0.2px',
+    '--label-spacing':  '1.5px',
+    '--fire':           '#DC2626',
+    '--fire-bg':        '#FEF2F2',
+    '--fire-border':    '#FECACA',
+    '--success':        '#15803D',
+    '--success-bg':     '#F0FDF4',
+    '--success-border': '#BBF7D0',
+    '--success-text':   '#166534',
+    '--shadow':         '0 1px 3px rgba(28,25,23,0.06), 0 4px 12px rgba(28,25,23,0.04)',
+    '--spec-low':       '#1c0a00',
+    '--spec-mid':       '#B45309',
+    '--spec-high':      '#FBBF24',
+    '--spec-peak':      '#FEF9C3',
+  },
+
+  midnight: {
+    '--bg':             '#0F172A',
+    '--bg-card':        '#1E293B',
+    '--bg-subtle':      '#162032',
+    '--border':         '#334155',
+    '--border-light':   '#1E3050',
+    '--text':           '#F1F5F9',
+    '--text-secondary': '#94A3B8',
+    '--text-muted':     '#475569',
+    '--primary':        '#60A5FA',
+    '--primary-bg':     '#1E3A5F',
+    '--primary-border': '#1D4ED8',
+    '--primary-glow':   'rgba(96,165,250,0.2)',
+    '--title-spacing':  '-0.2px',
+    '--label-spacing':  '1.5px',
+    '--fire':           '#F87171',
+    '--fire-bg':        '#3B1818',
+    '--fire-border':    '#7F1D1D',
+    '--success':        '#34D399',
+    '--success-bg':     '#022C22',
+    '--success-border': '#065F46',
+    '--success-text':   '#34D399',
+    '--shadow':         '0 2px 8px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.2)',
+    '--spec-low':       '#050d20',
+    '--spec-mid':       '#1D4ED8',
+    '--spec-high':      '#60A5FA',
+    '--spec-peak':      '#BFDBFE',
+  },
+
+  forest: {
+    '--bg':             '#F2F7F4',
+    '--bg-card':        '#FFFFFF',
+    '--bg-subtle':      '#EAF2EE',
+    '--border':         '#C6D9CE',
+    '--border-light':   '#DFF0E7',
+    '--text':           '#1A2E1A',
+    '--text-secondary': '#2D4A34',
+    '--text-muted':     '#6A8C72',
+    '--primary':        '#15803D',
+    '--primary-bg':     '#F0FDF4',
+    '--primary-border': '#BBF7D0',
+    '--primary-glow':   'rgba(21,128,61,0.15)',
+    '--title-spacing':  '0px',
+    '--label-spacing':  '1.4px',
+    '--fire':           '#B91C1C',
+    '--fire-bg':        '#FEF2F2',
+    '--fire-border':    '#FECACA',
+    '--success':        '#15803D',
+    '--success-bg':     '#F0FDF4',
+    '--success-border': '#BBF7D0',
+    '--success-text':   '#166534',
+    '--shadow':         '0 1px 3px rgba(26,46,26,0.06), 0 4px 12px rgba(26,46,26,0.04)',
+    '--spec-low':       '#052e10',
+    '--spec-mid':       '#15803D',
+    '--spec-high':      '#4ADE80',
+    '--spec-peak':      '#DCFCE7',
+  },
+
+  graphite: {
+    '--bg':             '#F5F5F5',
+    '--bg-card':        '#FFFFFF',
+    '--bg-subtle':      '#EFEFEF',
+    '--border':         '#D4D4D4',
+    '--border-light':   '#E5E5E5',
+    '--text':           '#171717',
+    '--text-secondary': '#404040',
+    '--text-muted':     '#737373',
+    '--primary':        '#404040',
+    '--primary-bg':     '#F5F5F5',
+    '--primary-border': '#D4D4D4',
+    '--primary-glow':   'rgba(64,64,64,0.1)',
+    '--title-spacing':  '0.5px',
+    '--label-spacing':  '1.8px',
+    '--fire':           '#DC2626',
+    '--fire-bg':        '#FEF2F2',
+    '--fire-border':    '#FECACA',
+    '--success':        '#404040',
+    '--success-bg':     '#F5F5F5',
+    '--success-border': '#D4D4D4',
+    '--success-text':   '#404040',
+    '--shadow':         '0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05)',
+    '--spec-low':       '#111',
+    '--spec-mid':       '#525252',
+    '--spec-high':      '#A3A3A3',
+    '--spec-peak':      '#E5E5E5',
+  },
+};
+
+// ── State ────────────────────────────────────────────────────────────────────
+let currentPalette = 'navy';
+let currentFont = 'IBM Plex Sans';
+let currentMono = 'IBM Plex Mono';
+let currentRadius = '8px';
+
+// ── Apply theme ──────────────────────────────────────────────────────────────
+function applyTheme() {
+  const preview = document.getElementById('preview');
+  const pal = PALETTES[currentPalette];
+
+  // CSS variables
+  for (const [key, val] of Object.entries(pal)) {
+    preview.style.setProperty(key, val);
+  }
+  preview.style.setProperty('--font', `'${currentFont}', -apple-system, sans-serif`);
+  preview.style.setProperty('--mono', `'${currentMono}', monospace`);
+  preview.style.setProperty('--radius', currentRadius);
+
+  // Apply font family directly
+  preview.style.fontFamily = `'${currentFont}', -apple-system, sans-serif`;
+
+  // Update confidence bar colors (primary)
+  document.getElementById('bar-fire').style.background = pal['--fire'];
+  document.getElementById('cpu-bar').style.background = pal['--primary'];
+  document.getElementById('flash-bar').style.background = pal['--primary'];
+
+  // Rebuild waveform bars
+  buildWave(pal['--primary']);
+}
+
+function buildWave(color) {
+  const container = document.getElementById('waveBars');
+  const heights = [20,35,60,45,80,55,90,40,70,50,85,30,65,45,75,55,40,90,60,35,80,50,70,45,65,30,85,55,40,75];
+  container.innerHTML = '';
+  heights.forEach(h => {
+    const bar = document.createElement('div');
+    bar.className = 'p-wave-bar';
+    bar.style.height = h + '%';
+    bar.style.background = color;
+    container.appendChild(bar);
+  });
+}
+
+// ── Font setter ──────────────────────────────────────────────────────────────
+function setFont(font, mono, btn) {
+  currentFont = font;
+  currentMono = mono;
+  document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyTheme();
+}
+
+// ── Palette setter ───────────────────────────────────────────────────────────
+function setPalette(name, btn) {
+  currentPalette = name;
+  document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyTheme();
+}
+
+// ── Radius setter ────────────────────────────────────────────────────────────
+function setRadius(val, btn) {
+  currentRadius = val;
+  // find only the radius buttons (they have data-r)
+  document.querySelectorAll('[data-r]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyTheme();
+}
+
+// ── Side toggle ──────────────────────────────────────────────────────────────
+function toggleSide() {
+  document.getElementById('shell').classList.toggle('panel-right');
+}
+
+// ── Copy config ──────────────────────────────────────────────────────────────
+function copyConfig() {
+  const radiusLabel = currentRadius === '4px' ? 'Nets (4px)' : currentRadius === '8px' ? 'Moyens (8px)' : 'Ronds (14px)';
+  const msg = `Police: ${currentFont} + ${currentMono}\nPalette: ${currentPalette}\nCoins: ${radiusLabel}`;
+  navigator.clipboard.writeText(msg).then(() => {
+    document.getElementById('copyHint').textContent = '✓ Copié dans le presse-papiers !';
+    setTimeout(() => document.getElementById('copyHint').textContent = `${currentFont} · ${currentPalette} · ${currentRadius}`, 2000);
+  });
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+applyTheme();
+</script>
+</body>
+</html>

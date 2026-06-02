@@ -1,0 +1,234 @@
+{
+  "audio_source": "data/raw/car_horn/synth_horn_005.wav",
+  "duration_sec": 4.69,
+  "total_frames": 8,
+  "alerts_count": 6,
+  "avg_latency_ms": 22.22,
+  "memory_kb": 48.3,
+  "results": [
+    {
+      "frame_id": 0,
+      "timestamp_ms": 0,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.1111111111111111,
+        0.1111111111111111,
+        0.1111111111111111,
+        0.44314236111111116,
+        0.1111111111111111,
+        0.1111111111111111
+      ],
+      "predicted_class": "car_horn",
+      "confidence": 0.44314236111111116,
+      "threshold": 0.8,
+      "alert_triggered": false,
+      "latency_host_ms": 2.79,
+      "latency_esp32_est_ms": 22.32,
+      "led_state": "\u001b[33m\u2588\u2588\u2588\u2588\u2588 YELLOW",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 1,
+      "timestamp_ms": 500,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.05555555555555555,
+        0.05555555555555555,
+        0.05555555555555555,
+        0.7196180555555555,
+        0.05555555555555555,
+        0.05555555555555555
+      ],
+      "predicted_class": "car_horn",
+      "confidence": 0.7196180555555555,
+      "threshold": 0.8,
+      "alert_triggered": false,
+      "latency_host_ms": 2.94,
+      "latency_esp32_est_ms": 23.5,
+      "led_state": "\u001b[33m\u2588\u2588\u2588\u2588\u2588 YELLOW",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 2,
+      "timestamp_ms": 1000,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0,
+        0.0
+      ],
+      "predicted_class": "car_horn",
+      "confidence": 0.99609375,
+      "threshold": 0.8,
+      "alert_triggered": true,
+      "latency_host_ms": 2.24,
+      "latency_esp32_est_ms": 17.93,
+      "led_state": "\u001b[33m\u2588\u2588\u2588\u2588\u2588 YELLOW",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 3,
+      "timestamp_ms": 1500,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0,
+        0.0
+      ],
+      "predicted_class": "car_horn",
+      "confidence": 0.99609375,
+      "threshold": 0.8,
+      "alert_triggered": true,
+      "latency_host_ms": 1.65,
+      "latency_esp32_est_ms": 13.23,
+      "led_state": "\u001b[33m\u2588\u2588\u2588\u2588\u2588 YELLOW",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 4,
+      "timestamp_ms": 2000,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0,
+        0.0
+      ],
+      "predicted_class": "car_horn",
+      "confidence": 0.99609375,
+      "threshold": 0.8,
+      "alert_triggered": true,
+      "latency_host_ms": 2.05,
+      "latency_esp32_est_ms": 16.38,
+      "led_state": "\u001b[33m\u2588\u2588\u2588\u2588\u2588 YELLOW",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 5,
+      "timestamp_ms": 2500,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0,
+        0.0
+      ],
+      "predicted_class": "car_horn",
+      "confidence": 0.99609375,
+      "threshold": 0.8,
+      "alert_triggered": true,
+      "latency_host_ms": 2.36,
+      "latency_esp32_est_ms": 18.87,
+      "led_state": "\u001b[33m\u2588\u2588\u2588\u2588\u2588 YELLOW",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 6,
+      "timestamp_ms": 3000,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0,
+        0.0
+      ],
+      "predicted_class": "car_horn",
+      "confidence": 0.99609375,
+      "threshold": 0.8,
+      "alert_triggered": true,
+      "latency_host_ms": 5.78,
+      "latency_esp32_est_ms": 46.25,
+      "led_state": "\u001b[33m\u2588\u2588\u2588\u2588\u2588 YELLOW",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    },
+    {
+      "frame_id": 7,
+      "timestamp_ms": 3500,
+      "raw_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0,
+        0.0
+      ],
+      "smoothed_probs": [
+        0.0,
+        0.0,
+        0.0,
+        0.99609375,
+        0.0,
+        0.0
+      ],
+      "predicted_class": "car_horn",
+      "confidence": 0.99609375,
+      "threshold": 0.8,
+      "alert_triggered": true,
+      "latency_host_ms": 2.41,
+      "latency_esp32_est_ms": 19.26,
+      "led_state": "\u001b[33m\u2588\u2588\u2588\u2588\u2588 YELLOW",
+      "vibro_state": "\u2593\u2593\u2593 (3 pulses)"
+    }
+  ]
+}

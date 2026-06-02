@@ -1,0 +1,3 @@
+# Wokwi libraries
+# Paste this in the Library Manager tab on Wokwi
+Adafruit NeoPixel

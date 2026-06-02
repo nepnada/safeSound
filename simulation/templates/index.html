@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeSound — Sound Alert System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg:           #F7F8FC;
+            --bg-card:      #FFFFFF;
+            --bg-subtle:    #F0F2F8;
+            --bg-hover:     #E8EBF4;
+            --border:       #E2E6F0;
+            --border-light: #ECEEF6;
+            --text:         #1E2A3B;
+            --text-secondary: #5B6B82;
+            --text-muted:   #95A0B4;
+            --primary:      #7B8CFC;
+            --primary-light:#EEF0FF;
+            --primary-dark: #5A68E0;
+            --primary-border:#C8CFFE;
+            --fire:         #EF7070;
+            --fire-bg:      #FFF0F0;
+            --fire-border:  #FCC;
+            --baby:         #F5A050;
+            --baby-bg:      #FFF6ED;
+            --baby-border:  #FDDCB8;
+            --choke:        #EF7070;
+            --horn:         #E8C040;
+            --horn-bg:      #FFFAED;
+            --horn-border:  #F5E4A0;
+            --door:         #5EA0F0;
+            --door-bg:      #EEF4FF;
+            --door-border:  #B4D4FF;
+            --bg-class:     #A0AAB8;
+            --bg-class-bg:  #F0F2F8;
+            --success:      #50D898;
+            --success-bg:   #EDFDF4;
+            --success-border:#A0ECC8;
+            --danger:       #EF7070;
+            --warning:      #E8C040;
+            --teal:         #50D0C0;
+            --teal-bg:      #ECFCF8;
+            --purple:       #A888F8;
+            --purple-bg:    #F4F0FF;
+            --purple-border:#D0C4FC;
+            --radius:       12px;
+            --radius-sm:    8px;
+            --radius-xs:    6px;
+            --shadow:       0 1px 3px rgba(30,42,59,0.04), 0 4px 14px rgba(30,42,59,0.03);
+            --shadow-lg:    0 2px 8px rgba(30,42,59,0.06), 0 8px 28px rgba(30,42,59,0.05);
+            --shadow-glow:  0 0 20px rgba(123,140,252,0.12);
+            --transition:   all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+        .app { max-width: 1320px; margin: 0 auto; padding: 0 28px; }
+
+        /* ── Icon base ───────────────────────────────────── */
+        .icon { display: inline-flex; align-items: center; justify-content: center; }
+        .icon svg { fill: currentColor; }
+
+        /* ── Tabs ─────────────────────────────────────────── */
+        .tabs {
+            display: flex; gap: 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 28px; overflow-x: auto;
+        }
+        .tab-btn {
+            padding: 13px 20px;
+            border: none; background: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px; font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+            white-space: nowrap;
+            display: inline-flex; align-items: center; gap: 7px;
+        }
+        .tab-btn:hover { color: var(--text-secondary); background: var(--bg-subtle); }
+        .tab-btn.active {
+            color: var(--primary-dark);
+            border-bottom-color: var(--primary);
+            font-weight: 700;
+        }
+        .tab-btn svg { width: 15px; height: 15px; fill: currentColor; }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ── Header ───────────────────────────────────────── */
+        .header {
+            display: flex; align-items: center;
+            justify-content: space-between;
+            padding: 18px 0; border-bottom: 1px solid var(--border-light);
+        }
+        .header-brand { display: flex; align-items: center; gap: 14px; }
+        .header-logo {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 14px rgba(123,140,252,0.3);
+        }
+        .header-logo svg { width: 20px; height: 20px; fill: #fff; }
+        .header-title { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
+        .header-subtitle { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .header-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 100px;
+            font-size: 11px; font-weight: 600;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+        }
+        .header-chip.green { background: var(--success-bg); border-color: var(--success-border); color: #2A8A62; }
+        .header-status {
+            display: flex; align-items: center; gap: 8px;
+            padding: 7px 14px; background: var(--bg-subtle);
+            border-radius: 100px; border: 1px solid var(--border-light);
+            font-size: 12px; font-weight: 500; color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        .header-status.active { background: var(--success-bg); border-color: var(--success-border); color: #2A8A62; }
+        .status-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--text-muted); transition: var(--transition);
+        }
+        .header-status.active .status-dot {
+            background: var(--success);
+            box-shadow: 0 0 8px rgba(80,216,152,0.5);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.4); }
+        }
+
+        /* ── Cards ────────────────────────────────────────── */
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 24px;
+            box-shadow: var(--shadow); transition: var(--transition);
+        }
+        .card:hover { box-shadow: var(--shadow-lg); }
+        .card-label {
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.2px; color: var(--text-muted); margin-bottom: 16px;
+        }
+
+        /* ── Hero / Mic Button ────────────────────────────── */
+        .hero { text-align: center; padding: 28px 0 32px 0; }
+        .hero-tagline { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+        .mic-btn-wrap { position: relative; display: inline-block; }
+        .mic-btn-ring {
+            position: absolute; inset: -14px; border-radius: 50%;
+            border: 2px solid var(--border); transition: var(--transition); opacity: 0;
+        }
+        .mic-btn-wrap.active .mic-btn-ring {
+            border-color: var(--primary); opacity: 1;
+            animation: ring-pulse 2.5s ease-in-out infinite;
+        }
+        @keyframes ring-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.15); opacity: 0; }
+        }
+        .mic-btn {
+            width: 76px; height: 76px; border-radius: 50%;
+            border: 2px solid var(--border); background: var(--bg-card);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: var(--shadow); transition: var(--transition); position: relative; z-index: 1;
+        }
+        .mic-btn:hover {
+            border-color: var(--primary); box-shadow: var(--shadow-lg), var(--shadow-glow);
+            transform: scale(1.04);
+        }
+        .mic-btn.active {
+            border-color: var(--primary); background: var(--primary-light);
+            box-shadow: var(--shadow-lg), 0 0 24px rgba(123,140,252,0.18);
+        }
+        .mic-btn svg { width: 26px; height: 26px; fill: var(--text-muted); transition: var(--transition); }
+        .mic-btn:hover svg, .mic-btn.active svg { fill: var(--primary-dark); }
+        .mic-label { margin-top: 14px; font-size: 13px; font-weight: 500; color: var(--text-muted); }
+        .mic-btn-wrap.active .mic-label { color: var(--primary-dark); font-weight: 600; }
+
+        /* ── Pipeline ─────────────────────────────────────── */
+        .pipeline { display: flex; align-items: center; justify-content: center; gap: 0; padding: 8px 0; flex-wrap: wrap; }
+        .pipe-step {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            padding: 10px 14px; border-radius: var(--radius-xs);
+            background: var(--bg-subtle); border: 1px solid var(--border-light);
+            min-width: 90px; transition: var(--transition);
+        }
+        .pipe-step.active { background: var(--primary-light); border-color: var(--primary-border); }
+        .pipe-step svg { width: 18px; height: 18px; fill: var(--text-muted); transition: var(--transition); }
+        .pipe-step.active svg { fill: var(--primary-dark); }
+        .pipe-name { font-size: 11px; font-weight: 600; color: var(--text); }
+        .pipe-detail { font-size: 9px; color: var(--text-muted); }
+        .pipe-arrow { color: var(--border); font-size: 14px; padding: 0 6px; }
+
+        /* ── Alert Banner ────────────────────────────────── */
+        .alert-banner {
+            display: none; align-items: center; gap: 12px;
+            padding: 14px 20px; border-radius: var(--radius);
+            margin-bottom: 20px; border: 1px solid;
+            animation: banner-in 0.3s ease;
+        }
+        .alert-banner.show { display: flex; }
+        .alert-banner.critical { background: var(--fire-bg); border-color: var(--fire-border); }
+        .alert-banner.high { background: var(--baby-bg); border-color: var(--baby-border); }
+        .alert-banner.medium { background: var(--door-bg); border-color: var(--door-border); }
+        @keyframes banner-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        .alert-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; animation: alert-pulse 1s ease-in-out infinite; }
+        @keyframes alert-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .alert-text { flex: 1; font-size: 14px; font-weight: 600; }
+        .alert-conf { font-size: 13px; font-family: 'JetBrains Mono', monospace; font-weight: 500; opacity: 0.7; }
+
+        /* ── Dashboard Grid ──────────────────────────────── */
+        .dashboard { display: grid; grid-template-columns: 1fr 240px 1fr; gap: 16px; margin-bottom: 20px; }
+
+        /* ── Waveform + Spectrogram ──────────────────────── */
+        .waveform-canvas, .spectrogram-canvas {
+            width: 100%; height: 120px; border-radius: var(--radius-sm);
+            background: var(--bg-subtle); border: 1px solid var(--border-light); display: block;
+        }
+
+        /* ── Bracelet ────────────────────────────────────── */
+        .bracelet-card { display: flex; flex-direction: column; align-items: center; }
+        .bracelet { width: 160px; height: 200px; position: relative; margin: 4px 0 12px 0; }
+        .bracelet-body {
+            position: absolute; inset: 0; border: 3px solid var(--border);
+            border-radius: 80px; background: var(--bg-subtle); transition: var(--transition);
+        }
+        .bracelet-body.alert { border-color: var(--primary); box-shadow: 0 0 24px rgba(123,140,252,0.12); }
+        .bracelet-leds {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            display: flex; flex-wrap: wrap; gap: 8px; width: 72px; justify-content: center;
+        }
+        .led { width: 13px; height: 13px; border-radius: 50%; background: var(--border); transition: var(--transition); border: 1px solid var(--border-light); }
+        .led.on { border-color: transparent; box-shadow: 0 0 10px currentColor; }
+        .bracelet-info { text-align: center; }
+        .bracelet-class { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+        .bracelet-conf { font-size: 20px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--primary); }
+        .bracelet-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .vibro-indicator {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 500;
+            color: var(--text-muted); background: var(--bg-subtle);
+            border: 1px solid var(--border-light); margin-top: 6px; transition: var(--transition);
+        }
+        .vibro-indicator.active {
+            color: var(--baby); background: var(--baby-bg);
+            border-color: var(--baby-border); animation: vibrate 0.15s linear infinite;
+        }
+        @keyframes vibrate { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-2px)} 75%{transform:translateX(2px)} }
+
+        /* ── Confidence Bars ─────────────────────────────── */
+        .conf-bars { display: flex; flex-direction: column; gap: 10px; }
+        .conf-row { display: flex; align-items: center; gap: 10px; }
+        .conf-name { width: 78px; font-size: 12px; font-weight: 500; color: var(--text-secondary); text-align: right; white-space: nowrap; }
+        .conf-track { flex: 1; height: 8px; background: var(--bg-subtle); border-radius: 100px; overflow: hidden; border: 1px solid var(--border-light); position: relative; }
+        .conf-fill { height: 100%; border-radius: 100px; width: 0%; transition: width 0.4s cubic-bezier(0.4,0,0.2,1), background 0.3s ease; }
+        .conf-threshold-line { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--text-muted); opacity: 0.2; border-radius: 1px; }
+        .conf-value { width: 42px; font-size: 12px; font-weight: 600; font-family: 'JetBrains Mono', monospace; color: var(--text-muted); }
+        .conf-row.top .conf-name { color: var(--text); font-weight: 600; }
+        .conf-row.top .conf-value { color: var(--text); }
+
+        /* ── Bottom Grid ─────────────────────────────────── */
+        .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+        /* ── ESP32 Resources ─────────────────────────────── */
+        .resource-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .resource-item { text-align: center; padding: 14px 8px; background: var(--bg-subtle); border-radius: var(--radius-sm); border: 1px solid var(--border-light); }
+        .resource-icon { margin-bottom: 6px; }
+        .resource-icon svg { width: 22px; height: 22px; fill: var(--text-muted); }
+        .resource-val { font-size: 18px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .resource-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
+        .resource-bar-track { width: 100%; height: 5px; background: var(--border-light); border-radius: 100px; overflow: hidden; margin-top: 8px; }
+        .resource-bar-fill { height: 100%; border-radius: 100px; transition: width 0.5s ease; }
+
+        /* ── Event Log ────────────────────────────────────── */
+        .event-list { max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
+        .event-list::-webkit-scrollbar { width: 4px; }
+        .event-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+        .event-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 12px; border-radius: var(--radius-xs);
+            background: var(--bg-subtle); border: 1px solid var(--border-light);
+            animation: event-in 0.3s ease;
+        }
+        @keyframes event-in { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+        .event-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .event-class { flex: 1; font-size: 13px; font-weight: 500; }
+        .event-conf { font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--text-secondary); }
+        .event-time { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+        .event-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 13px; }
+
+        /* ── Live Stats ──────────────────────────────────── */
+        .live-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 20px; }
+        .live-stat { text-align: center; padding: 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow); }
+        .live-stat-val { font-size: 22px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .live-stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
+
+        /* ── Buttons ──────────────────────────────────────── */
+        .btn {
+            font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+            padding: 9px 20px; border: none; border-radius: var(--radius-xs);
+            cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(123,140,252,0.3); }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(123,140,252,0.35); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* ── File Test ─────────────────────────────────────── */
+        .file-test-controls { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; align-items: flex-end; }
+        .file-test-controls select, .file-test-controls input[type="file"] {
+            font-family: 'Inter', sans-serif; font-size: 13px;
+            padding: 8px 12px; border: 1px solid var(--border);
+            border-radius: var(--radius-xs); background: var(--bg-card);
+            color: var(--text); outline: none; transition: var(--transition);
+        }
+        .file-test-controls select:focus { border-color: var(--primary); }
+        .file-results-summary { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 16px; }
+        .file-stat { text-align: center; padding: 12px; background: var(--bg-subtle); border-radius: var(--radius-sm); border: 1px solid var(--border-light); }
+        .file-stat-val { font-size: 18px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .file-stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
+        .file-timeline canvas { width: 100%; height: 160px; border-radius: var(--radius-sm); background: var(--bg-subtle); border: 1px solid var(--border-light); display: block; }
+        .file-frames { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 12px; }
+        .file-frame {
+            width: 32px; height: 32px; border-radius: 4px; display: flex;
+            align-items: center; justify-content: center; font-size: 9px;
+            font-weight: 600; font-family: 'JetBrains Mono', monospace;
+            color: #fff; cursor: default; transition: var(--transition); border: 1px solid transparent;
+        }
+        .file-frame:hover { transform: scale(1.2); z-index: 2; }
+
+        /* ── Signal Processing ────────────────────────────── */
+        .sp-step {
+            padding: 14px 20px; border-radius: 0 var(--radius) var(--radius) 0;
+            margin: 22px 0 12px 0; display: flex; align-items: center; gap: 12px;
+            border-left: 3px solid;
+        }
+        .sp-step-num {
+            width: 28px; height: 28px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 800; flex-shrink: 0;
+        }
+        .sp-step-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+        .sp-step-detail { font-size: 11px; color: var(--text-secondary); margin-left: 8px; }
+        .sp-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-top: 12px; }
+        .sp-stat {
+            padding: 10px 12px; background: var(--bg-subtle);
+            border-radius: var(--radius-xs); border: 1px solid var(--border-light);
+        }
+        .sp-stat-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 3px; }
+        .sp-stat-val { font-size: 15px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .sp-canvas {
+            width: 100%; height: 140px; border-radius: var(--radius-sm);
+            background: var(--bg-subtle); border: 1px solid var(--border-light); display: block;
+        }
+
+        /* ── KD Section ───────────────────────────────────── */
+        .kd-flow { display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: stretch; }
+        .kd-card { padding: 20px; border-radius: var(--radius-sm); background: var(--bg-subtle); border: 1px solid var(--border-light); }
+        .kd-card.student { background: var(--primary-light); border-color: var(--primary-border); }
+        .kd-card-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .kd-card-title svg { width: 16px; height: 16px; }
+        .kd-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-light); font-size: 12px; }
+        .kd-row:last-child { border-bottom: none; }
+        .kd-row-label { color: var(--text-secondary); }
+        .kd-row-val { font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+        .kd-arrow { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 0 8px; }
+        .kd-arrow-line { width: 40px; height: 2px; background: var(--primary); position: relative; }
+        .kd-arrow-line::after { content: '\2192'; position: absolute; right: -12px; top: -10px; color: var(--primary); font-size: 18px; }
+        .kd-arrow-label { font-size: 10px; font-weight: 600; color: var(--primary-dark); text-transform: uppercase; letter-spacing: 0.8px; }
+        .kd-compression { display: flex; gap: 10px; margin-top: 16px; justify-content: center; flex-wrap: wrap; }
+        .kd-badge { padding: 6px 14px; border-radius: 100px; font-size: 11px; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+        .kd-badge.params { background: var(--primary-light); color: var(--primary-dark); border: 1px solid var(--primary-border); }
+        .kd-badge.size { background: var(--success-bg); color: #2A8A62; border: 1px solid var(--success-border); }
+        .kd-badge.acc { background: var(--door-bg); color: var(--door); border: 1px solid var(--door-border); }
+        .kd-arch { margin-top: 14px; padding: 12px; background: var(--bg-card); border-radius: var(--radius-xs); border: 1px solid var(--border-light); }
+        .kd-arch-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; }
+        .kd-layer { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--text-secondary); }
+        .kd-layer-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); flex-shrink: 0; }
+
+        /* ── IoT Architecture ─────────────────────────────── */
+        .iot-flow { display: flex; align-items: center; justify-content: center; gap: 0; padding: 12px 0; flex-wrap: wrap; }
+        .iot-node {
+            padding: 14px 16px; text-align: center; min-width: 110px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); box-shadow: var(--shadow);
+        }
+        .iot-node-name { font-size: 12px; font-weight: 700; }
+        .iot-node-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+        .iot-node-detail { font-size: 10px; font-weight: 600; margin-top: 4px; }
+        .iot-arrow { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; padding: 0 4px; }
+        .iot-arrow-line { height: 2px; width: 30px; background: var(--border); }
+        .iot-arrow-label { font-size: 8px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.3px; margin-top: 2px; }
+        .iot-table { width: 100%; border-collapse: collapse; }
+        .iot-table th { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border); }
+        .iot-table td { font-size: 12px; padding: 10px 12px; border-bottom: 1px solid var(--border-light); }
+        .iot-table td:first-child { font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+        .iot-pin-block { background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-xs); padding: 12px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-secondary); line-height: 2; }
+        .iot-mqtt-topic { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border-light); }
+        .iot-mqtt-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; margin-top: 5px; }
+        .iot-mqtt-name { font-size: 12px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .iot-mqtt-dir { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+        .iot-mqtt-desc { font-size: 10px; color: var(--text-muted); }
+
+        /* ── Footer ───────────────────────────────────────── */
+        .footer { border-top: 1px solid var(--border-light); padding: 20px 0 32px 0; margin-top: 8px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 12px; }
+        .footer-item { text-align: center; }
+        .footer-val { font-size: 15px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .footer-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
+
+        /* ── Section header ──────────────────────────────── */
+        .section-header { margin-bottom: 20px; }
+        .section-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+        .section-desc { font-size: 13px; color: var(--text-secondary); }
+
+        @media (max-width: 960px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .bottom-grid { grid-template-columns: 1fr; }
+            .kd-flow { grid-template-columns: 1fr; }
+            .kd-arrow { flex-direction: row; padding: 8px 0; }
+            .footer-grid { grid-template-columns: repeat(3,1fr); }
+            .file-results-summary, .sp-stats { grid-template-columns: repeat(2,1fr); }
+            .iot-flow { gap: 8px; }
+            .header-right { display: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+
+    <!-- ── Header ───────────────────────────────────────── -->
+    <header class="header">
+        <div class="header-brand">
+            <div class="header-logo">
+                <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h2v-2.06A9 9 0 0 0 21 12v-2h-2z"/></svg>
+            </div>
+            <div>
+                <div class="header-title">SafeSound</div>
+                <div class="header-subtitle">IoT Sound Alert Bracelet &mdash; ESP32-S3</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <span class="header-chip">TFLite INT8 &middot; 36.4 KB</span>
+            <span class="header-chip green">95.4% Accuracy</span>
+            <div class="header-status" id="statusBadge">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Idle</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ── Tabs ──────────────────────────────────────────── -->
+    <div class="tabs" id="tabBar">
+        <button class="tab-btn active" data-tab="live">
+            <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h2v-2.06A9 9 0 0 0 21 12v-2h-2z"/></svg>
+            Live Detection
+        </button>
+        <button class="tab-btn" data-tab="filetest">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+            File Test
+        </button>
+        <button class="tab-btn" data-tab="signal">
+            <svg viewBox="0 0 24 24"><path d="M2 12h2l3-7 4 14 4-10 3 3h4"/><circle cx="22" cy="12" r="0" fill="none"/></svg>
+            Signal Processing
+        </button>
+        <button class="tab-btn" data-tab="ml">
+            <svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4c0 1.1-.45 2.1-1.17 2.83L12 12l-2.83-3.17A4 4 0 0 1 12 2zM4 14l4 4H8l4-4 4 4h-4l4 4H4l4-4H4z"/></svg>
+            ML Performance
+        </button>
+        <button class="tab-btn" data-tab="iot">
+            <svg viewBox="0 0 24 24"><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0l1 3H3l1-3M9 10h.01M15 10h.01M12 14h.01"/></svg>
+            IoT System
+        </button>
+    </div>
+
+    <!-- ══════════════ TAB: LIVE DETECTION ══════════════── -->
+    <div class="tab-panel active" id="panel-live">
+        <div class="card" style="margin-bottom: 20px; padding: 14px 20px;">
+            <div class="pipeline" id="pipeline">
+                <div class="pipe-step" id="pipeCapture">
+                    <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h2v-2.06A9 9 0 0 0 21 12v-2h-2z"/></svg>
+                    <span class="pipe-name">Capture</span><span class="pipe-detail">16kHz Mono</span>
+                </div>
+                <span class="pipe-arrow">&rarr;</span>
+                <div class="pipe-step" id="pipeMel">
+                    <svg viewBox="0 0 24 24"><path d="M4 20h16V4H4v16zM6 18V6h12v12H6zm2-2h2V8H8v8zm3 0h2v-6h-2v6zm3 0h2v-4h-2v4z"/></svg>
+                    <span class="pipe-name">Log-Mel</span><span class="pipe-detail">64 ch</span>
+                </div>
+                <span class="pipe-arrow">&rarr;</span>
+                <div class="pipe-step" id="pipeModel">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    <span class="pipe-name">DS-CNN</span><span class="pipe-detail">36.4 KB</span>
+                </div>
+                <span class="pipe-arrow">&rarr;</span>
+                <div class="pipe-step" id="pipeSmooth">
+                    <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+                    <span class="pipe-name">Smoothing</span><span class="pipe-detail">3-frame</span>
+                </div>
+                <span class="pipe-arrow">&rarr;</span>
+                <div class="pipe-step" id="pipeAlert">
+                    <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                    <span class="pipe-name">Alert</span><span class="pipe-detail">LED+Vibro</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero">
+            <div class="hero-tagline">Tap to start real-time sound classification</div>
+            <div class="mic-btn-wrap" id="micWrap">
+                <div class="mic-btn-ring"></div>
+                <button class="mic-btn" id="micBtn" aria-label="Toggle microphone">
+                    <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h2v-2.06A9 9 0 0 0 21 12v-2h-2z"/></svg>
+                </button>
+                <div class="mic-label" id="micLabel">Start Listening</div>
+            </div>
+        </div>
+
+        <div class="alert-banner" id="alertBanner">
+            <span class="alert-dot" id="alertDot"></span>
+            <span class="alert-text" id="alertText"></span>
+            <span class="alert-conf" id="alertConf"></span>
+        </div>
+
+        <div class="dashboard">
+            <div>
+                <div class="card" style="margin-bottom:16px;">
+                    <div class="card-label">Live Waveform</div>
+                    <canvas class="waveform-canvas" id="waveformCanvas"></canvas>
+                </div>
+                <div class="card">
+                    <div class="card-label">Log-Mel Spectrogram</div>
+                    <canvas class="spectrogram-canvas" id="spectrogramCanvas"></canvas>
+                </div>
+            </div>
+            <div class="card bracelet-card">
+                <div class="card-label">Bracelet Output</div>
+                <div class="bracelet">
+                    <div class="bracelet-body" id="braceletBody">
+                        <div class="bracelet-leds" id="braceletLeds">
+                            <div class="led"></div><div class="led"></div><div class="led"></div><div class="led"></div>
+                            <div class="led"></div><div class="led"></div><div class="led"></div><div class="led"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bracelet-info">
+                    <div class="bracelet-class" id="braceletClass">&mdash;</div>
+                    <div class="bracelet-conf" id="braceletConf">&mdash;</div>
+                    <div class="bracelet-meta" id="braceletLatency">&mdash;</div>
+                </div>
+                <div class="vibro-indicator" id="vibroIndicator">
+                    <svg viewBox="0 0 16 16" width="12" height="12"><path d="M2 4v8l3-2h5V6H5L2 4zM12 6c1 1 1 3 0 4M14 4c2 2 2 6 0 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    <span id="vibroText">Idle</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-label">Class Confidence</div>
+                <div class="conf-bars" id="confBars"></div>
+            </div>
+        </div>
+
+        <div class="live-stats">
+            <div class="live-stat"><div class="live-stat-val" id="statFrames">0</div><div class="live-stat-label">Frames</div></div>
+            <div class="live-stat"><div class="live-stat-val" id="statAlerts">0</div><div class="live-stat-label">Alerts</div></div>
+            <div class="live-stat"><div class="live-stat-val" id="statLatency">&mdash;</div><div class="live-stat-label">Avg ESP32 Latency</div></div>
+            <div class="live-stat"><div class="live-stat-val" id="statDuration">0s</div><div class="live-stat-label">Duration</div></div>
+        </div>
+
+        <div class="bottom-grid">
+            <div class="card">
+                <div class="card-label">Detection Events</div>
+                <div class="event-list" id="eventList">
+                    <div class="event-empty" id="eventEmpty">No alerts detected yet. Start listening to begin.</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-label">ESP32-S3 Resource Monitor</div>
+                <div class="resource-grid">
+                    <div class="resource-item">
+                        <div class="resource-icon"><svg viewBox="0 0 24 24" fill="var(--text-muted)"><path d="M17 20H7V4h10m0-2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM9 7h6v2H9V7z"/></svg></div>
+                        <div class="resource-val" id="resRam">{{ total_mem_kb }} KB</div>
+                        <div class="resource-label">SRAM Used</div>
+                        <div class="resource-bar-track"><div class="resource-bar-fill" id="resRamBar" style="width:{{mem_pct}}%;background:var(--success);"></div></div>
+                        <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">{{total_mem_kb}} / {{sram_kb}} KB ({{mem_pct}}%)</div>
+                    </div>
+                    <div class="resource-item">
+                        <div class="resource-icon"><svg viewBox="0 0 24 24" fill="var(--text-muted)"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg></div>
+                        <div class="resource-val">{{clock_mhz}} MHz</div>
+                        <div class="resource-label">CPU Clock</div>
+                        <div class="resource-bar-track"><div class="resource-bar-fill" style="width:12%;background:var(--primary);"></div></div>
+                        <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">~12% utilization</div>
+                    </div>
+                    <div class="resource-item">
+                        <div class="resource-icon"><svg viewBox="0 0 24 24" fill="var(--text-muted)"><path d="M16 20H8V6h8m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><path d="M10 2v2h4V2"/></svg></div>
+                        <div class="resource-val" id="resBattery">100%</div>
+                        <div class="resource-label">Battery</div>
+                        <div class="resource-bar-track"><div class="resource-bar-fill" id="resBatteryBar" style="width:100%;background:var(--success);"></div></div>
+                        <div style="font-size:10px;color:var(--text-muted);margin-top:4px;" id="resBatteryTime">~10h remaining</div>
+                    </div>
+                    <div class="resource-item">
+                        <div class="resource-icon"><svg viewBox="0 0 24 24" fill="var(--text-muted)"><path d="M20 2H4v20h16V2zm-2 18H6V4h12v16zM8 6h8v4H8V6z"/></svg></div>
+                        <div class="resource-val">{{model_size_kb}} KB</div>
+                        <div class="resource-label">Flash (Model)</div>
+                        <div class="resource-bar-track"><div class="resource-bar-fill" style="width:{{(model_size_kb/(flash_mb*1024)*100)|round(1)}}%;background:var(--door);"></div></div>
+                        <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">{{model_size_kb}} KB / {{flash_mb}} MB</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════ TAB: FILE TEST ═══════════════════── -->
+    <div class="tab-panel" id="panel-filetest">
+        <div class="card" style="margin-bottom:20px;">
+            <div class="card-label">Test Audio File</div>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">Select a sample from the dataset or upload your own audio file to run the full inference pipeline frame-by-frame.</p>
+            <div class="file-test-controls">
+                <div><label style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;display:block;margin-bottom:4px;">Source</label><select id="ftSource" style="min-width:120px;"><option value="dataset">Dataset</option><option value="upload">Upload</option></select></div>
+                <div id="ftDatasetControls"><label style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;display:block;margin-bottom:4px;">Class</label><select id="ftClass" style="min-width:120px;"></select></div>
+                <div id="ftDatasetFileWrap"><label style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;display:block;margin-bottom:4px;">File</label><select id="ftFile" style="min-width:200px;"></select></div>
+                <div id="ftUploadWrap" style="display:none;"><label style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;display:block;margin-bottom:4px;">Upload</label><input type="file" id="ftUpload" accept=".wav,.mp3,.ogg,.flac"></div>
+                <div><label style="display:block;margin-bottom:4px;">&nbsp;</label><button class="btn btn-primary" id="ftRunBtn"><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M4 2l10 6-10 6z"/></svg> Run Inference</button></div>
+            </div>
+        </div>
+        <div id="ftResults" style="display:none;">
+            <div class="file-results-summary" id="ftSummary"></div>
+            <div class="card" style="margin-bottom:20px;"><div class="card-label">Confidence Timeline</div><div class="file-timeline"><canvas id="ftTimelineCanvas"></canvas></div></div>
+            <div class="card"><div class="card-label">Frame-by-Frame Results</div><div class="file-frames" id="ftFrames"></div></div>
+        </div>
+    </div>
+
+    <!-- ══════════════ TAB: SIGNAL PROCESSING ════════════ -->
+    <div class="tab-panel" id="panel-signal">
+        <div class="section-header">
+            <div class="section-title">Signal Processing Pipeline</div>
+            <div class="section-desc">Step-by-step visualization from raw microphone samples to the INT8 tensor fed into the model.</div>
+        </div>
+        <div class="card" style="margin-bottom:20px;">
+            <div class="file-test-controls">
+                <div><label style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;display:block;margin-bottom:4px;">Class</label><select id="spClass" style="min-width:140px;"></select></div>
+                <div><label style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;display:block;margin-bottom:4px;">Sample</label><select id="spFile" style="min-width:220px;"></select></div>
+                <div><label style="display:block;margin-bottom:4px;">&nbsp;</label><button class="btn btn-primary" id="spRunBtn"><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M2 12h2l3-7 4 14 4-10 3 3h4" fill="none" stroke="currentColor" stroke-width="2"/></svg> Analyze Pipeline</button></div>
+            </div>
+        </div>
+        <div id="spResults" style="display:none;">
+            <div class="sp-step" style="background:var(--primary-light);border-color:var(--primary);">
+                <div class="sp-step-num" style="background:var(--primary);color:#fff;">1</div>
+                <div><span class="sp-step-title" style="color:var(--primary-dark);">Raw Waveform</span><span class="sp-step-detail">16,000 samples at 16 kHz = 1 second window</span></div>
+            </div>
+            <canvas class="sp-canvas" id="spWaveCanvas"></canvas>
+            <div class="sp-stats" id="spWaveStats"></div>
+
+            <div class="sp-step" style="background:var(--purple-bg);border-color:var(--purple);">
+                <div class="sp-step-num" style="background:var(--purple);color:#fff;">2</div>
+                <div><span class="sp-step-title" style="color:#7C5CC8;">Log-Mel Spectrogram</span><span class="sp-step-detail">STFT (N_FFT=512, hop=256) mapped to 64 Mel bins</span></div>
+            </div>
+            <canvas class="sp-canvas" id="spMelCanvas"></canvas>
+            <div class="sp-stats" id="spMelStats"></div>
+
+            <div class="sp-step" style="background:var(--teal-bg);border-color:var(--teal);">
+                <div class="sp-step-num" style="background:var(--teal);color:#fff;">3</div>
+                <div><span class="sp-step-title" style="color:#2AA090;">Normalized [0, 1]</span><span class="sp-step-detail">Min-max normalization &mdash; float32 model input</span></div>
+            </div>
+            <canvas class="sp-canvas" id="spNormCanvas"></canvas>
+            <div class="sp-stats" id="spNormStats"></div>
+
+            <div class="sp-step" style="background:var(--baby-bg);border-color:var(--baby);">
+                <div class="sp-step-num" style="background:var(--baby);color:#fff;">4</div>
+                <div><span class="sp-step-title" style="color:#C07030;">INT8 Quantization</span><span class="sp-step-detail">Affine: x_int8 = x_float / scale + zero_point. 4x memory reduction.</span></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><div class="card-label" style="margin-bottom:8px;">Float32 Input</div><canvas class="sp-canvas" id="spFloat32Canvas"></canvas></div>
+                <div><div class="card-label" style="margin-bottom:8px;">INT8 Quantized</div><canvas class="sp-canvas" id="spInt8Canvas"></canvas></div>
+            </div>
+            <div class="sp-stats" id="spQuantStats"></div>
+        </div>
+    </div>
+
+    <!-- ══════════════ TAB: ML PERFORMANCE ═══════════════ -->
+    <div class="tab-panel" id="panel-ml">
+        <div class="section-header">
+            <div class="section-title">ML Architecture &amp; Performance</div>
+            <div class="section-desc">Knowledge distillation pipeline, quantization-aware training, and per-class evaluation metrics.</div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px;">
+            <div class="card-label">Knowledge Distillation Pipeline</div>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:20px;">A large Teacher model transfers its learned class relationships to a tiny Student model via soft probability distributions. The Student achieves <strong>95.4% accuracy in just 36.4 KB</strong> &mdash; deployable on a microcontroller.</p>
+            <div class="kd-flow">
+                <div class="kd-card">
+                    <div class="kd-card-title"><svg viewBox="0 0 24 24" fill="var(--text-secondary)"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg> Teacher Model</div>
+                    <div class="kd-row"><span class="kd-row-label">Architecture</span><span class="kd-row-val">ResNet-style CNN</span></div>
+                    <div class="kd-row"><span class="kd-row-label">Layers</span><span class="kd-row-val">4x Conv+BN+ReLU</span></div>
+                    <div class="kd-row"><span class="kd-row-label">Parameters</span><span class="kd-row-val">423,174</span></div>
+                    <div class="kd-row"><span class="kd-row-label">Size</span><span class="kd-row-val">~1.7 MB</span></div>
+                    <div class="kd-row"><span class="kd-row-label">Accuracy</span><span class="kd-row-val">94.1%</span></div>
+                    <div class="kd-row"><span class="kd-row-label">Deployable</span><span class="kd-row-val" style="color:var(--danger);">Too large</span></div>
+                    <div class="kd-arch"><div class="kd-arch-title">Architecture</div>
+                        <div class="kd-layer"><span class="kd-layer-dot"></span>Conv2D(32) &rarr; BN &rarr; ReLU &rarr; MaxPool</div>
+                        <div class="kd-layer"><span class="kd-layer-dot"></span>Conv2D(64) &rarr; BN &rarr; ReLU &rarr; MaxPool</div>
+                        <div class="kd-layer"><span class="kd-layer-dot"></span>Conv2D(128) &rarr; BN &rarr; ReLU &rarr; MaxPool</div>
+                        <div class="kd-layer"><span class="kd-layer-dot"></span>Conv2D(256) &rarr; BN &rarr; ReLU &rarr; GAP</div>
+                        <div class="kd-layer"><span class="kd-layer-dot"></span>Dense(128) &rarr; Dense(6, softmax)</div>
+                    </div>
+                </div>
+                <div class="kd-arrow"><div class="kd-arrow-label">Distillation</div><div class="kd-arrow-line"></div><div style="font-size:10px;color:var(--text-muted);text-align:center;line-height:1.5;">T = 6<br>&alpha; = 0.7<br>Loss = &alpha;KL + (1-&alpha;)CE</div></div>
+                <div class="kd-card student">
+                    <div class="kd-card-title"><svg viewBox="0 0 24 24" fill="var(--primary-dark)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> Student Model <span style="font-size:10px;font-weight:400;color:var(--primary);">(DEPLOYED)</span></div>
+                    <div class="kd-row"><span class="kd-row-label">Architecture</span><span class="kd-row-val">DS-CNN</span></div>
+                    <div class="kd-row"><span class="kd-row-label">Blocks</span><span class="kd-row-val">3x Depthwise Sep.</span></div>
+                    <div class="kd-row"><span class="kd-row-label">Parameters</span><span class="kd-row-val">18,086</span></div>
+                    <div class="kd-row"><span class="kd-row-label">Size (INT8)</span><span class="kd-row-val" style="color:var(--primary-dark);">36.4 KB</span></div>
+                    <div class="kd-row"><span class="kd-row-label">Accuracy</span><span class="kd-row-val" style="color:#2A8A62;">95.4%</span></div>
+                    <div class="kd-row"><span class="kd-row-label">Deployable</span><span class="kd-row-val" style="color:#2A8A62;">ESP32-S3</span></div>
+                    <div class="kd-arch"><div class="kd-arch-title">Architecture</div>
+                        <div class="kd-layer"><span class="kd-layer-dot"></span>Conv2D(32) &rarr; BN &rarr; ReLU &rarr; MaxPool</div>
+                        <div class="kd-layer"><span class="kd-layer-dot"></span>DW(3x3) &rarr; BN &rarr; PW(64) &rarr; MaxPool</div>
+                        <div class="kd-layer"><span class="kd-layer-dot"></span>DW(3x3) &rarr; BN &rarr; PW(64) &rarr; MaxPool</div>
+                        <div class="kd-layer"><span class="kd-layer-dot"></span>DW(3x3) &rarr; BN &rarr; PW(128) &rarr; GAP</div>
+                        <div class="kd-layer"><span class="kd-layer-dot"></span>Dense(6, softmax)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="kd-compression">
+                <span class="kd-badge params">23.4x fewer params</span>
+                <span class="kd-badge size">4x smaller (INT8)</span>
+                <span class="kd-badge acc">+1.3% accuracy (QAT)</span>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px;">
+            <div class="card-label">Quantization-Aware Training</div>
+            <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:16px;margin-top:8px;align-items:center;">
+                <div style="padding:16px;background:var(--bg-subtle);border-radius:var(--radius-sm);border:1px solid var(--border-light);text-align:center;">
+                    <div style="font-size:24px;font-weight:800;font-family:'JetBrains Mono',monospace;">Float32</div>
+                    <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">72.8 KB &middot; 94.1%</div>
+                </div>
+                <div style="text-align:center;color:var(--text-muted);font-size:12px;line-height:1.6;">
+                    <div style="font-weight:600;">&rarr; QAT &rarr;</div><div>10 epochs</div><div>LR = 1e-5</div>
+                </div>
+                <div style="padding:16px;background:var(--primary-light);border-radius:var(--radius-sm);border:1px solid var(--primary-border);text-align:center;">
+                    <div style="font-size:24px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--primary-dark);">INT8</div>
+                    <div style="font-size:11px;color:var(--primary-dark);margin-top:4px;">36.4 KB &middot; 95.4%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px;">
+            <div class="card-label">Per-Class F1 Score &mdash; TFLite INT8</div>
+            <canvas id="f1Canvas" style="width:100%;height:260px;display:block;"></canvas>
+        </div>
+
+        <div class="card" style="margin-bottom:20px;">
+            <div class="card-label">Confusion Matrix</div>
+            <div style="text-align:center;"><img id="cmImage" src="/api/confusion-matrix" alt="Confusion Matrix" style="max-width:100%;border-radius:var(--radius-sm);border:1px solid var(--border-light);"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Training Configuration</div>
+            <table class="iot-table">
+                <tbody>
+                    <tr><td>Distillation temperature (T)</td><td>6</td></tr>
+                    <tr><td>Alpha (&alpha;) &mdash; hard/soft loss mix</td><td>0.7</td></tr>
+                    <tr><td>QAT epochs</td><td>10</td></tr>
+                    <tr><td>QAT learning rate</td><td>1 x 10&#8315;&#8309;</td></tr>
+                    <tr><td>Input shape (INT8)</td><td>(1, 64, 63, 1)</td></tr>
+                    <tr><td>Temporal smoothing</td><td>3-frame circular buffer, majority vote</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ══════════════ TAB: IoT SYSTEM ══════════════════ -->
+    <div class="tab-panel" id="panel-iot">
+        <div class="section-header">
+            <div class="section-title">IoT System Architecture</div>
+            <div class="section-desc">Hardware design, communication stack, MQTT schema, and embedded system integration.</div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px;">
+            <div class="card-label">End-to-End Communication Stack</div>
+            <div class="iot-flow">
+                <div class="iot-node"><div class="iot-node-name">INMP441</div><div class="iot-node-sub">I2S Microphone</div><div class="iot-node-detail" style="color:var(--primary);">16 kHz</div></div>
+                <div class="iot-arrow"><div class="iot-arrow-line"></div><div class="iot-arrow-label">I2S DMA</div></div>
+                <div class="iot-node"><div class="iot-node-name">ESP32-S3</div><div class="iot-node-sub">DS-CNN INT8</div><div class="iot-node-detail" style="color:var(--primary);">240 MHz</div></div>
+                <div class="iot-arrow"><div class="iot-arrow-line"></div><div class="iot-arrow-label">BLE 5.0</div></div>
+                <div class="iot-node"><div class="iot-node-name">Smartphone</div><div class="iot-node-sub">MQTT Bridge</div><div class="iot-node-detail" style="color:var(--purple);">BLE &rarr; MQTT</div></div>
+                <div class="iot-arrow"><div class="iot-arrow-line"></div><div class="iot-arrow-label">MQTT</div></div>
+                <div class="iot-node"><div class="iot-node-name">Mosquitto</div><div class="iot-node-sub">MQTT Broker</div><div class="iot-node-detail" style="color:var(--teal);">port 1883</div></div>
+                <div class="iot-arrow"><div class="iot-arrow-line"></div><div class="iot-arrow-label">Subscribe</div></div>
+                <div class="iot-node"><div class="iot-node-name">Node-RED</div><div class="iot-node-sub">Flow Engine</div><div class="iot-node-detail" style="color:var(--teal);">port 1880</div></div>
+                <div class="iot-arrow"><div class="iot-arrow-line"></div><div class="iot-arrow-label">Push</div></div>
+                <div class="iot-node"><div class="iot-node-name">Caregiver</div><div class="iot-node-sub">Alert App</div><div class="iot-node-detail" style="color:var(--success);">Real-time</div></div>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+            <div class="card">
+                <div class="card-label">Bill of Materials</div>
+                <table class="iot-table">
+                    <thead><tr><th>Part</th><th>Role</th><th>Details</th></tr></thead>
+                    <tbody>
+                        <tr><td>ESP32-S3 DevKitC</td><td>MCU</td><td>Dual-core LX7 @ 240 MHz, 8 MB PSRAM</td></tr>
+                        <tr><td>INMP441</td><td>Microphone</td><td>I2S MEMS, 16 kHz, SNR 61 dB</td></tr>
+                        <tr><td>WS2812B x8</td><td>LED Strip</td><td>RGB, color-coded per class</td></tr>
+                        <tr><td>ERM 3V DC</td><td>Vibration</td><td>NPN transistor driver, haptic</td></tr>
+                        <tr><td>LiPo 3.7V 1Ah</td><td>Battery</td><td>8-12 h runtime, USB-C</td></tr>
+                        <tr><td>TP4056</td><td>Charger IC</td><td>Li-Ion management + protection</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <div class="card-label">MQTT Topic Schema</div>
+                <div class="iot-mqtt-topic"><div class="iot-mqtt-dot" style="background:var(--primary);"></div><div><div class="iot-mqtt-name">safesound/classification</div><div class="iot-mqtt-dir" style="color:var(--primary);">ESP32 &rarr; Broker</div><div class="iot-mqtt-desc">class + confidence JSON payload</div></div></div>
+                <div class="iot-mqtt-topic"><div class="iot-mqtt-dot" style="background:var(--fire);"></div><div><div class="iot-mqtt-name">safesound/alert</div><div class="iot-mqtt-dir" style="color:var(--fire);">ESP32 &rarr; Broker</div><div class="iot-mqtt-desc">triggered when threshold exceeded</div></div></div>
+                <div class="iot-mqtt-topic"><div class="iot-mqtt-dot" style="background:var(--success);"></div><div><div class="iot-mqtt-name">safesound/device/status</div><div class="iot-mqtt-dir" style="color:var(--success);">ESP32 &rarr; Broker</div><div class="iot-mqtt-desc">battery %, uptime, RSSI</div></div></div>
+                <div class="iot-mqtt-topic"><div class="iot-mqtt-dot" style="background:var(--baby);"></div><div><div class="iot-mqtt-name">safesound/notification</div><div class="iot-mqtt-dir" style="color:var(--baby);">Broker &rarr; Caregiver</div><div class="iot-mqtt-desc">push notification payload</div></div></div>
+                <div class="iot-mqtt-topic" style="border-bottom:none;"><div class="iot-mqtt-dot" style="background:var(--purple);"></div><div><div class="iot-mqtt-name">safesound/config/thresholds</div><div class="iot-mqtt-dir" style="color:var(--purple);">Broker &rarr; ESP32</div><div class="iot-mqtt-desc">remote threshold configuration</div></div></div>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+            <div class="card">
+                <div class="card-label">ESP32-S3 Pin Assignments</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div><div style="font-size:10px;color:var(--primary);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">I2S &mdash; INMP441</div><div class="iot-pin-block">SCK &nbsp;= GPIO 14<br>WS &nbsp;&nbsp;= GPIO 15<br>SD &nbsp;&nbsp;= GPIO 13</div></div>
+                    <div><div style="font-size:10px;color:var(--purple);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Outputs</div><div class="iot-pin-block">LED_DATA = GPIO 5<br>MOTOR &nbsp;&nbsp;= GPIO 6<br>STATUS &nbsp;= GPIO 7</div></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-label">Power Budget &mdash; 3.7V LiPo 1000 mAh</div>
+                <table class="iot-table">
+                    <thead><tr><th>Component</th><th style="text-align:right;">Current</th></tr></thead>
+                    <tbody>
+                        <tr><td>ESP32-S3 (active, 240 MHz)</td><td style="text-align:right;color:var(--primary);font-weight:600;">~80 mA</td></tr>
+                        <tr><td>INMP441 microphone</td><td style="text-align:right;color:var(--purple);font-weight:600;">~1.4 mA</td></tr>
+                        <tr><td>WS2812B LEDs (idle)</td><td style="text-align:right;font-weight:600;">~3 mA</td></tr>
+                        <tr><td>WS2812B LEDs (alert, 8 LEDs)</td><td style="text-align:right;color:var(--fire);font-weight:600;">~160 mA</td></tr>
+                        <tr><td>ERM vibration motor</td><td style="text-align:right;color:var(--teal);font-weight:600;">~80 mA</td></tr>
+                        <tr style="font-weight:700;"><td>Total (typical, no alert)</td><td style="text-align:right;color:var(--success);font-weight:700;">~90 mA &rarr; 8-12 h</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">ESP32-S3 Memory Budget</div>
+            <div style="max-width:600px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:12px;">TFLite Model</span><span style="font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;">36.4 KB / 512 KB</span></div>
+                <div style="height:8px;background:var(--border-light);border-radius:4px;overflow:hidden;margin-bottom:14px;"><div style="width:7.1%;height:100%;background:var(--primary);border-radius:4px;"></div></div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:12px;">Runtime (model + buffers)</span><span style="font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;">48.3 KB / 512 KB</span></div>
+                <div style="height:8px;background:var(--border-light);border-radius:4px;overflow:hidden;margin-bottom:8px;"><div style="width:9.4%;height:100%;background:var(--success);border-radius:4px;"></div></div>
+                <div style="font-size:11px;color:var(--text-muted);">9.4% of SRAM used &mdash; 90.6% headroom for additional features</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Footer ────────────────────────────────────────── -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-item"><div class="footer-val">36.4 KB</div><div class="footer-label">Model Size</div></div>
+            <div class="footer-item"><div class="footer-val">INT8</div><div class="footer-label">Quantization</div></div>
+            <div class="footer-item"><div class="footer-val">18,086</div><div class="footer-label">Parameters</div></div>
+            <div class="footer-item"><div class="footer-val">95.4%</div><div class="footer-label">Accuracy</div></div>
+            <div class="footer-item"><div class="footer-val">&lt; 2ms</div><div class="footer-label">ESP32 Latency</div></div>
+            <div class="footer-item"><div class="footer-val">6</div><div class="footer-label">Classes</div></div>
+        </div>
+    </footer>
+</div>
+
+<script>
+// ═════════════════════════════════════════════════════════════════════════════
+//  SafeSound Dashboard
+// ═════════════════════════════════════════════════════════════════════════════
+
+const CLASSES=["fire_alarm","baby_cry","choking","car_horn","doorbell","background"];
+const CLASS_LABELS={fire_alarm:"Fire Alarm",baby_cry:"Baby Cry",choking:"Choking",car_horn:"Car Horn",doorbell:"Doorbell",background:"Background"};
+const CLASS_COLORS={fire_alarm:"#EF7070",baby_cry:"#F5A050",choking:"#EF7070",car_horn:"#E8C040",doorbell:"#5EA0F0",background:"#A0AAB8"};
+const THRESHOLDS={fire_alarm:0.75,baby_cry:0.80,choking:0.75,car_horn:0.80,doorbell:0.90,background:0.50};
+const TARGET_SR=16000;
+const DATASET_FILES={{ dataset_files | safe }};
+
+let isListening=false,ws=null,audioContext=null,mediaStream=null;
+let processorNode=null,sampleBuffer=[],analyserNode=null,waveformAnimId=null;
+let totalFrames=0,totalAlerts=0,latencies=[],startTime=null,durationInterval=null;
+let alertTimeout=null,batteryPct=100,batteryInterval=null;
+let specHistory=[];
+
+// ── Tabs ─────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+        if(btn.dataset.tab==='ml') drawF1Chart();
+    });
+});
+
+// ── Confidence bars init ─────────────────────────────────
+const confBarsEl=document.getElementById('confBars');
+CLASSES.forEach(cls=>{
+    const row=document.createElement('div');
+    row.className='conf-row';row.id=`conf-row-${cls}`;
+    row.innerHTML=`<span class="conf-name">${CLASS_LABELS[cls]}</span><div class="conf-track"><div class="conf-fill" id="conf-fill-${cls}" style="background:${CLASS_COLORS[cls]}"></div><div class="conf-threshold-line" style="left:${THRESHOLDS[cls]*100}%"></div></div><span class="conf-value" id="conf-val-${cls}">0%</span>`;
+    confBarsEl.appendChild(row);
+});
+
+// ── Pipeline highlight ───────────────────────────────────
+const pipeIds=['pipeCapture','pipeMel','pipeModel','pipeSmooth','pipeAlert'];
+function highlightPipeline(n){pipeIds.forEach((id,i)=>document.getElementById(id).classList.toggle('active',i<=n));}
+
+// ── Canvas setup ─────────────────────────────────────────
+const wfCanvas=document.getElementById('waveformCanvas'),wfCtx=wfCanvas.getContext('2d');
+const specCanvas=document.getElementById('spectrogramCanvas'),specCtx=specCanvas.getContext('2d');
+function resizeCanvas(){
+    const r=wfCanvas.parentElement.getBoundingClientRect();
+    wfCanvas.width=r.width-48;wfCanvas.height=120;
+    specCanvas.width=r.width-48;specCanvas.height=120;
+}
+resizeCanvas();window.addEventListener('resize',resizeCanvas);
+
+function drawIdleCanvas(cv,ctx,msg){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.strokeStyle='#E2E6F0';ctx.lineWidth=1;
+    for(let y=0;y<=cv.height;y+=cv.height/4){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cv.width,y);ctx.stroke();}
+    ctx.fillStyle='#95A0B4';ctx.font='13px Inter,sans-serif';ctx.textAlign='center';
+    ctx.fillText(msg,cv.width/2,cv.height/2+5);
+}
+drawIdleCanvas(wfCanvas,wfCtx,'Microphone inactive');
+drawIdleCanvas(specCanvas,specCtx,'Spectrogram inactive');
+
+function drawWaveform(){
+    if(!analyserNode)return;
+    const buf=new Uint8Array(analyserNode.fftSize);
+    analyserNode.getByteTimeDomainData(buf);
+    wfCtx.clearRect(0,0,wfCanvas.width,wfCanvas.height);
+    wfCtx.strokeStyle='#E2E6F0';wfCtx.lineWidth=1;
+    for(let y=0;y<=wfCanvas.height;y+=wfCanvas.height/4){wfCtx.beginPath();wfCtx.moveTo(0,y);wfCtx.lineTo(wfCanvas.width,y);wfCtx.stroke();}
+    wfCtx.strokeStyle='#C8CFFE';wfCtx.setLineDash([4,4]);wfCtx.beginPath();wfCtx.moveTo(0,wfCanvas.height/2);wfCtx.lineTo(wfCanvas.width,wfCanvas.height/2);wfCtx.stroke();wfCtx.setLineDash([]);
+    wfCtx.strokeStyle='#7B8CFC';wfCtx.lineWidth=2;wfCtx.beginPath();
+    const sw=wfCanvas.width/buf.length;let x=0;
+    for(let i=0;i<buf.length;i++){const v=buf[i]/128,y=v*wfCanvas.height/2;i===0?wfCtx.moveTo(x,y):wfCtx.lineTo(x,y);x+=sw;}
+    wfCtx.stroke();
+    waveformAnimId=requestAnimationFrame(drawWaveform);
+}
+
+function drawSpectrogram(specData){
+    specHistory.push(specData);
+    if(specHistory.length>40)specHistory.shift();
+    const h=specCanvas.height,w=specCanvas.width;
+    specCtx.clearRect(0,0,w,h);
+    const nCols=specHistory.length,colW=w/40,melBins=specData.length;
+    const binH=h/melBins;
+    for(let c=0;c<nCols;c++){
+        const col=specHistory[c];
+        for(let m=0;m<melBins;m++){
+            const val=col[m];
+            const avg=Array.isArray(val)?val.reduce((a,b)=>a+b,0)/val.length:val;
+            const intensity=Math.min(1,Math.max(0,avg));
+            const r=Math.round(100+intensity*123);
+            const g=Math.round(90+intensity*140);
+            const b=Math.round(180+intensity*72);
+            specCtx.fillStyle=`rgb(${r},${g},${b})`;
+            specCtx.fillRect(c*colW,h-(m+1)*binH,colW+1,binH+1);
+        }
+    }
+}
+
+// ── Battery ──────────────────────────────────────────────
+function startBattery(){batteryPct=100;updateBatteryUI();batteryInterval=setInterval(()=>{batteryPct=Math.max(0,batteryPct-0.028);updateBatteryUI();},1000);}
+function stopBattery(){if(batteryInterval){clearInterval(batteryInterval);batteryInterval=null;}}
+function updateBatteryUI(){
+    document.getElementById('resBattery').textContent=Math.round(batteryPct)+'%';
+    const bar=document.getElementById('resBatteryBar');
+    bar.style.width=batteryPct+'%';
+    bar.style.background=batteryPct>30?'var(--success)':batteryPct>10?'var(--warning)':'var(--danger)';
+    document.getElementById('resBatteryTime').textContent=`~${(batteryPct/100*10).toFixed(1)}h remaining`;
+}
+
+// ── Mic Toggle ───────────────────────────────────────────
+document.getElementById('micBtn').addEventListener('click',()=>{isListening?stopListening():startListening();});
+
+async function startListening(){
+    try{
+        const proto=location.protocol==='https:'?'wss':'ws';
+        ws=new WebSocket(`${proto}://${location.host}/ws`);
+        ws.binaryType='arraybuffer';
+        ws.onmessage=handleResult;
+        ws.onclose=()=>{if(isListening)stopListening();};
+        ws.onerror=()=>{if(isListening)stopListening();};
+        await new Promise((res,rej)=>{ws.onopen=res;setTimeout(()=>rej(new Error('timeout')),5000);});
+
+        mediaStream=await navigator.mediaDevices.getUserMedia({audio:{sampleRate:TARGET_SR,channelCount:1,echoCancellation:false,noiseSuppression:false}});
+        audioContext=new(window.AudioContext||window.webkitAudioContext)({sampleRate:TARGET_SR});
+        const source=audioContext.createMediaStreamSource(mediaStream);
+        analyserNode=audioContext.createAnalyser();analyserNode.fftSize=2048;
+        source.connect(analyserNode);
+        processorNode=audioContext.createScriptProcessor(4096,1,1);
+        sampleBuffer=[];
+        processorNode.onaudioprocess=e=>{
+            const input=e.inputBuffer.getChannelData(0);
+            sampleBuffer.push(...input);
+            while(sampleBuffer.length>=TARGET_SR){
+                const chunk=new Float32Array(sampleBuffer.splice(0,TARGET_SR));
+                if(ws&&ws.readyState===WebSocket.OPEN)ws.send(chunk.buffer);
+            }
+        };
+        source.connect(processorNode);
+        processorNode.connect(audioContext.destination);
+
+        isListening=true;totalFrames=0;totalAlerts=0;latencies=[];startTime=Date.now();specHistory=[];
+        document.getElementById('micBtn').classList.add('active');
+        document.getElementById('micWrap').classList.add('active');
+        document.getElementById('micLabel').textContent='Stop Listening';
+        document.getElementById('statusBadge').classList.add('active');
+        document.getElementById('statusText').textContent='Listening';
+        highlightPipeline(0);drawWaveform();startBattery();
+        durationInterval=setInterval(updateDuration,1000);
+    }catch(err){console.error(err);alert('Could not access microphone.');stopListening();}
+}
+
+function stopListening(){
+    isListening=false;
+    if(processorNode){processorNode.disconnect();processorNode=null;}
+    if(audioContext){audioContext.close();audioContext=null;}
+    if(mediaStream){mediaStream.getTracks().forEach(t=>t.stop());mediaStream=null;}
+    if(ws){ws.close();ws=null;}
+    if(waveformAnimId){cancelAnimationFrame(waveformAnimId);waveformAnimId=null;}
+    if(durationInterval){clearInterval(durationInterval);durationInterval=null;}
+    stopBattery();analyserNode=null;sampleBuffer=[];
+    document.getElementById('micBtn').classList.remove('active');
+    document.getElementById('micWrap').classList.remove('active');
+    document.getElementById('micLabel').textContent='Start Listening';
+    document.getElementById('statusBadge').classList.remove('active');
+    document.getElementById('statusText').textContent='Idle';
+    document.getElementById('alertBanner').classList.remove('show');
+    pipeIds.forEach(id=>document.getElementById(id).classList.remove('active'));
+    drawIdleCanvas(wfCanvas,wfCtx,'Microphone inactive');
+    drawIdleCanvas(specCanvas,specCtx,'Spectrogram inactive');
+    resetBracelet();
+}
+
+function handleResult(event){
+    const r=JSON.parse(event.data);
+    if(r.type==='reset_ack')return;
+    totalFrames++;latencies.push(r.est_esp32_ms);highlightPipeline(4);
+    CLASSES.forEach(cls=>{
+        const val=r.probs[cls]||0,pct=Math.round(val*100);
+        document.getElementById(`conf-fill-${cls}`).style.width=pct+'%';
+        document.getElementById(`conf-val-${cls}`).textContent=pct+'%';
+        document.getElementById(`conf-row-${cls}`).classList.toggle('top',cls===r.predicted_class);
+    });
+    updateBracelet(r);
+    if(r.spectrogram)drawSpectrogram(r.spectrogram);
+    if(r.alert){totalAlerts++;showAlert(r);addEvent(r);}
+    else{if(alertTimeout)clearTimeout(alertTimeout);alertTimeout=setTimeout(()=>{document.getElementById('alertBanner').classList.remove('show');},2000);}
+    document.getElementById('statFrames').textContent=totalFrames;
+    document.getElementById('statAlerts').textContent=totalAlerts;
+    document.getElementById('statLatency').textContent=(latencies.reduce((a,b)=>a+b,0)/latencies.length).toFixed(1)+'ms';
+}
+
+function updateDuration(){if(!startTime)return;const s=Math.round((Date.now()-startTime)/1000),m=Math.floor(s/60);document.getElementById('statDuration').textContent=m>0?`${m}m ${s%60}s`:`${s}s`;}
+
+function updateBracelet(r){
+    const color=CLASS_COLORS[r.predicted_class],alert=r.alert;
+    document.getElementById('braceletClass').textContent=CLASS_LABELS[r.predicted_class];
+    const confEl=document.getElementById('braceletConf');
+    confEl.textContent=(r.confidence*100).toFixed(1)+'%';
+    confEl.style.color=alert?color:'var(--text-muted)';
+    document.getElementById('braceletLatency').textContent=`~${r.est_esp32_ms.toFixed(1)}ms on ESP32`;
+    document.querySelectorAll('#braceletLeds .led').forEach(led=>{
+        if(alert){led.classList.add('on');led.style.background=color;led.style.color=color;}
+        else{led.classList.remove('on');led.style.background='';led.style.color='';}
+    });
+    const body=document.getElementById('braceletBody');
+    body.classList.toggle('alert',alert);
+    body.style.borderColor=alert?color:'';body.style.boxShadow=alert?`0 0 24px ${color}22`:'';
+    const vib=alert&&r.predicted_class!=='background';
+    document.getElementById('vibroIndicator').classList.toggle('active',vib);
+    document.getElementById('vibroText').textContent=vib?r.vibration:'Idle';
+}
+function resetBracelet(){
+    document.getElementById('braceletClass').textContent='—';
+    const c=document.getElementById('braceletConf');c.textContent='—';c.style.color='';
+    document.getElementById('braceletLatency').textContent='—';
+    const b=document.getElementById('braceletBody');b.classList.remove('alert');b.style.borderColor='';b.style.boxShadow='';
+    document.querySelectorAll('#braceletLeds .led').forEach(l=>{l.classList.remove('on');l.style.background='';});
+    document.getElementById('vibroIndicator').classList.remove('active');
+    document.getElementById('vibroText').textContent='Idle';
+}
+
+function showAlert(r){
+    const b=document.getElementById('alertBanner');
+    b.className=`alert-banner show ${r.priority.toLowerCase()}`;
+    document.getElementById('alertDot').style.background=CLASS_COLORS[r.predicted_class];
+    const t=document.getElementById('alertText');t.textContent=CLASS_LABELS[r.predicted_class]+' Detected';t.style.color=CLASS_COLORS[r.predicted_class];
+    const c=document.getElementById('alertConf');c.textContent=(r.confidence*100).toFixed(1)+'%';c.style.color=CLASS_COLORS[r.predicted_class];
+    if(alertTimeout)clearTimeout(alertTimeout);
+}
+
+function addEvent(r){
+    document.getElementById('eventEmpty').style.display='none';
+    const el=document.getElementById('eventList'),item=document.createElement('div');
+    item.className='event-item';
+    const now=new Date();
+    const ts=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+    item.innerHTML=`<span class="event-dot" style="background:${CLASS_COLORS[r.predicted_class]}"></span><span class="event-class">${CLASS_LABELS[r.predicted_class]}</span><span class="event-conf">${(r.confidence*100).toFixed(1)}%</span><span class="event-time">${ts}</span>`;
+    el.insertBefore(item,el.firstChild);
+    while(el.children.length>51)el.removeChild(el.lastChild);
+}
+
+// ══════════════════════════════════════════════════════════
+//  FILE TEST TAB
+// ══════════════════════════════════════════════════════════
+
+const ftSource=document.getElementById('ftSource'),ftClassSel=document.getElementById('ftClass'),ftFileSel=document.getElementById('ftFile'),ftUpload=document.getElementById('ftUpload');
+Object.keys(DATASET_FILES).forEach(cls=>{const opt=document.createElement('option');opt.value=cls;opt.textContent=CLASS_LABELS[cls]||cls;ftClassSel.appendChild(opt);});
+function populateFiles(){ftFileSel.innerHTML='';const cls=ftClassSel.value;if(DATASET_FILES[cls]){DATASET_FILES[cls].forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;ftFileSel.appendChild(o);});}}
+ftClassSel.addEventListener('change',populateFiles);populateFiles();
+ftSource.addEventListener('change',()=>{const u=ftSource.value==='upload';document.getElementById('ftDatasetControls').style.display=u?'none':'';document.getElementById('ftDatasetFileWrap').style.display=u?'none':'';document.getElementById('ftUploadWrap').style.display=u?'':'none';});
+
+document.getElementById('ftRunBtn').addEventListener('click',async()=>{
+    const btn=document.getElementById('ftRunBtn');btn.disabled=true;btn.textContent='Running...';
+    try{
+        const fd=new FormData();
+        if(ftSource.value==='upload'){if(!ftUpload.files.length){alert('Select a file');return;}fd.append('file',ftUpload.files[0]);}
+        else{fd.append('dataset_class',ftClassSel.value);fd.append('dataset_file',ftFileSel.value);}
+        const resp=await fetch('/api/test-file',{method:'POST',body:fd});
+        if(!resp.ok){const e=await resp.json();alert(e.error||'Error');return;}
+        renderFileResults(await resp.json());
+    }catch(e){alert('Error: '+e.message);}
+    finally{btn.disabled=false;btn.innerHTML='<svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M4 2l10 6-10 6z"/></svg> Run Inference';}
+});
+
+function renderFileResults(data){
+    document.getElementById('ftResults').style.display='block';
+    const results=data.results,alerts=results.filter(r=>r.alert);
+    const avgLat=results.reduce((a,r)=>a+r.est_esp32_ms,0)/results.length;
+    document.getElementById('ftSummary').innerHTML=`
+        <div class="file-stat"><div class="file-stat-val">${data.duration}s</div><div class="file-stat-label">Duration</div></div>
+        <div class="file-stat"><div class="file-stat-val">${results.length}</div><div class="file-stat-label">Frames</div></div>
+        <div class="file-stat"><div class="file-stat-val">${alerts.length}</div><div class="file-stat-label">Alerts</div></div>
+        <div class="file-stat"><div class="file-stat-val">${avgLat.toFixed(1)}ms</div><div class="file-stat-label">Avg ESP32 Latency</div></div>`;
+    const tc=document.getElementById('ftTimelineCanvas'),pr=tc.parentElement.getBoundingClientRect();
+    tc.width=pr.width-48;tc.height=160;const tctx=tc.getContext('2d');tctx.clearRect(0,0,tc.width,tc.height);
+    CLASSES.forEach(cls=>{
+        tctx.strokeStyle=CLASS_COLORS[cls];tctx.lineWidth=cls==='background'?1:2;tctx.globalAlpha=cls==='background'?0.3:0.8;
+        tctx.beginPath();results.forEach((r,i)=>{const x=i/(results.length-1)*tc.width,y=(1-r.probs[cls])*tc.height;i===0?tctx.moveTo(x,y):tctx.lineTo(x,y);});tctx.stroke();
+    });
+    tctx.globalAlpha=1;
+    CLASSES.forEach(cls=>{if(cls==='background')return;const y=(1-THRESHOLDS[cls])*tc.height;tctx.strokeStyle=CLASS_COLORS[cls];tctx.lineWidth=1;tctx.setLineDash([3,3]);tctx.globalAlpha=0.25;tctx.beginPath();tctx.moveTo(0,y);tctx.lineTo(tc.width,y);tctx.stroke();});
+    tctx.setLineDash([]);tctx.globalAlpha=1;
+    results.forEach((r,i)=>{if(!r.alert)return;const x=i/(results.length-1)*tc.width;tctx.fillStyle=CLASS_COLORS[r.predicted_class];tctx.beginPath();tctx.arc(x,4,4,0,Math.PI*2);tctx.fill();});
+    const framesEl=document.getElementById('ftFrames');framesEl.innerHTML='';
+    results.forEach((r,i)=>{const div=document.createElement('div');div.className='file-frame'+(r.alert?' alert-frame':'');div.style.background=CLASS_COLORS[r.predicted_class];div.style.opacity=r.alert?1:0.5;div.textContent=i;div.title=`${CLASS_LABELS[r.predicted_class]} ${(r.confidence*100).toFixed(1)}% @ ${r.time}s`;framesEl.appendChild(div);});
+}
+
+// ══════════════════════════════════════════════════════════
+//  SIGNAL PROCESSING TAB
+// ══════════════════════════════════════════════════════════
+
+const spClassSel=document.getElementById('spClass'),spFileSel=document.getElementById('spFile');
+Object.keys(DATASET_FILES).forEach(cls=>{const o=document.createElement('option');o.value=cls;o.textContent=CLASS_LABELS[cls]||cls;spClassSel.appendChild(o);});
+function populateSpFiles(){spFileSel.innerHTML='';const cls=spClassSel.value;if(DATASET_FILES[cls]){DATASET_FILES[cls].forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;spFileSel.appendChild(o);});}}
+spClassSel.addEventListener('change',populateSpFiles);populateSpFiles();
+
+document.getElementById('spRunBtn').addEventListener('click',async()=>{
+    const btn=document.getElementById('spRunBtn');btn.disabled=true;btn.textContent='Analyzing...';
+    try{
+        const fd=new FormData();fd.append('class',spClassSel.value);fd.append('file',spFileSel.value);
+        const resp=await fetch('/api/signal-pipeline',{method:'POST',body:fd});
+        if(!resp.ok){alert('Error');return;}
+        renderSignalPipeline(await resp.json());
+    }catch(e){alert('Error: '+e.message);}
+    finally{btn.disabled=false;btn.innerHTML='<svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M2 12h2l3-7 4 14 4-10 3 3h4" fill="none" stroke="currentColor" stroke-width="2"/></svg> Analyze Pipeline';}
+});
+
+function renderSignalPipeline(d){
+    document.getElementById('spResults').style.display='block';
+
+    // 1. Waveform
+    const wc=document.getElementById('spWaveCanvas');wc.width=wc.parentElement.getBoundingClientRect().width;wc.height=140;
+    const wctx=wc.getContext('2d');wctx.clearRect(0,0,wc.width,wc.height);
+    wctx.strokeStyle='#E2E6F0';wctx.lineWidth=1;
+    wctx.beginPath();wctx.moveTo(0,wc.height/2);wctx.lineTo(wc.width,wc.height/2);wctx.stroke();
+    wctx.strokeStyle='#7B8CFC';wctx.lineWidth=1.5;wctx.beginPath();
+    const wData=d.waveform,wStep=wc.width/wData.length;
+    wData.forEach((v,i)=>{const y=wc.height/2-v*wc.height/2;i===0?wctx.moveTo(0,y):wctx.lineTo(i*wStep,y);});
+    wctx.stroke();
+    // Fill
+    wctx.fillStyle='rgba(123,140,252,0.08)';wctx.beginPath();wctx.moveTo(0,wc.height/2);
+    wData.forEach((v,i)=>{wctx.lineTo(i*wStep,wc.height/2-v*wc.height/2);});
+    wctx.lineTo(wc.width,wc.height/2);wctx.closePath();wctx.fill();
+
+    document.getElementById('spWaveStats').innerHTML=statCards([['Sample Rate','16,000 Hz'],['Samples',d.samples.toLocaleString()],['Duration','1.000 s'],['RMS Energy',d.rms.toFixed(4)]]);
+
+    // 2. Log-Mel
+    drawHeatmap('spMelCanvas',d.log_mel,'purple');
+    document.getElementById('spMelStats').innerHTML=statCards([['Shape',d.mel_shape.join(' x ')],['Mel Bins','64'],['Freq Range','60 - 7600 Hz'],['dB Range',`${d.log_mel_min} to ${d.log_mel_max}`]]);
+
+    // 3. Normalized
+    drawHeatmap('spNormCanvas',d.normalized,'teal');
+    document.getElementById('spNormStats').innerHTML=statCards([['Range','[0.000, 1.000]'],['Data Type','float32'],['Shape',`(1, ${d.mel_shape.join(', ')}, 1)`],['Memory',d.float32_kb+' KB']]);
+
+    // 4. INT8 side by side
+    drawHeatmap('spFloat32Canvas',d.normalized,'blue');
+    drawHeatmap('spInt8Canvas',d.int8,'orange',true);
+    document.getElementById('spQuantStats').innerHTML=statCards([['Scale Factor',d.quant_scale.toFixed(6)],['Zero Point',d.quant_zero],['Float32 Size',d.float32_kb+' KB'],['INT8 Size',d.int8_kb+' KB (4x smaller)']]);
+}
+
+function statCards(items){
+    return items.map(([l,v])=>`<div class="sp-stat"><div class="sp-stat-label">${l}</div><div class="sp-stat-val">${v}</div></div>`).join('');
+}
+
+function drawHeatmap(canvasId,data,scheme,isInt8){
+    const cv=document.getElementById(canvasId);
+    const parent=cv.parentElement;
+    cv.width=parent.getBoundingClientRect().width;cv.height=140;
+    const ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);
+    const rows=data.length,cols=data[0].length;
+    const cw=cv.width/cols,ch=cv.height/rows;
+
+    let minV=Infinity,maxV=-Infinity;
+    data.forEach(row=>row.forEach(v=>{if(v<minV)minV=v;if(v>maxV)maxV=v;}));
+    const range=maxV-minV||1;
+
+    for(let r=0;r<rows;r++){
+        for(let c=0;c<cols;c++){
+            const t=(data[r][c]-minV)/range;
+            let R,G,B;
+            if(scheme==='purple'){R=Math.round(60+t*180);G=Math.round(50+t*140);B=Math.round(120+t*128);}
+            else if(scheme==='teal'){R=Math.round(40+t*160);G=Math.round(100+t*150);B=Math.round(120+t*120);}
+            else if(scheme==='blue'){R=Math.round(80+t*150);G=Math.round(100+t*150);B=Math.round(160+t*90);}
+            else if(scheme==='orange'){R=Math.round(120+t*130);G=Math.round(80+t*120);B=Math.round(40+t*80);}
+            else{R=G=B=Math.round(t*255);}
+            ctx.fillStyle=`rgb(${R},${G},${B})`;
+            ctx.fillRect(c*cw,cv.height-(r+1)*ch,cw+1,ch+1);
+        }
+    }
+}
+
+// ══════════════════════════════════════════════════════════
+//  F1 CHART (ML Performance tab)
+// ══════════════════════════════════════════════════════════
+
+const F1_DATA=[
+    {name:'Fire Alarm',f1:0.945,color:'#EF7070'},
+    {name:'Baby Cry',f1:1.000,color:'#F5A050'},
+    {name:'Choking',f1:0.900,color:'#EF7070'},
+    {name:'Car Horn',f1:0.933,color:'#E8C040'},
+    {name:'Doorbell',f1:0.906,color:'#5EA0F0'},
+    {name:'Background',f1:0.993,color:'#A0AAB8'},
+];
+
+function drawF1Chart(){
+    const cv=document.getElementById('f1Canvas');if(!cv)return;
+    const pr=cv.parentElement.getBoundingClientRect();
+    cv.width=pr.width-48;cv.height=260;
+    const ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);
+    const pad={left:90,right:60,top:20,bottom:20};
+    const w=cv.width-pad.left-pad.right,h=cv.height-pad.top-pad.bottom;
+    const barH=h/F1_DATA.length*0.6,gap=h/F1_DATA.length*0.4;
+
+    // axis
+    const minX=0.80;
+    ctx.strokeStyle='#E2E6F0';ctx.lineWidth=1;
+    for(let v=0.80;v<=1.0;v+=0.05){
+        const x=pad.left+(v-minX)/(1-minX)*w;
+        ctx.beginPath();ctx.moveTo(x,pad.top);ctx.lineTo(x,pad.top+h);ctx.stroke();
+        ctx.fillStyle='#95A0B4';ctx.font='10px JetBrains Mono,monospace';ctx.textAlign='center';
+        ctx.fillText((v*100).toFixed(0)+'%',x,pad.top+h+14);
+    }
+
+    // macro avg line
+    const avgX=pad.left+(0.946-minX)/(1-minX)*w;
+    ctx.strokeStyle='#A888F8';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(avgX,pad.top);ctx.lineTo(avgX,pad.top+h);ctx.stroke();
+    ctx.setLineDash([]);ctx.fillStyle='#A888F8';ctx.font='10px Inter,sans-serif';ctx.textAlign='left';
+    ctx.fillText('Macro F1 = 0.946',avgX+4,pad.top+10);
+
+    F1_DATA.forEach((d,i)=>{
+        const y=pad.top+i*(barH+gap)+gap/2;
+        const bw=(d.f1-minX)/(1-minX)*w;
+        // bar
+        ctx.fillStyle=d.color+'CC';
+        ctx.beginPath();
+        const r=4;
+        ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+bw-r,y);ctx.quadraticCurveTo(pad.left+bw,y,pad.left+bw,y+r);
+        ctx.lineTo(pad.left+bw,y+barH-r);ctx.quadraticCurveTo(pad.left+bw,y+barH,pad.left+bw-r,y+barH);
+        ctx.lineTo(pad.left,y+barH);ctx.closePath();ctx.fill();
+        // label
+        ctx.fillStyle='#1E2A3B';ctx.font='12px Inter,sans-serif';ctx.textAlign='right';
+        ctx.fillText(d.name,pad.left-8,y+barH/2+4);
+        // value
+        ctx.fillStyle='#1E2A3B';ctx.font='bold 12px JetBrains Mono,monospace';ctx.textAlign='left';
+        ctx.fillText(d.f1.toFixed(3),pad.left+bw+6,y+barH/2+4);
+    });
+}
+
+// Draw on first load if ML tab is visible
+setTimeout(drawF1Chart,100);
+window.addEventListener('resize',drawF1Chart);
+</script>
+</body>
+</html>
